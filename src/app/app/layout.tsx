@@ -5,6 +5,7 @@ import truck from "../../../public/imgs/truck.png"
 import box from "../../../public/imgs/box.png"
 import printer from "../../../public/imgs/printer.png"
 import car from "../../../public/imgs/car.png"
+import home from "../../../public/imgs/home.png"
 interface Props {
   children: ReactNode
 }
@@ -12,8 +13,13 @@ interface Props {
 const Root = ({ children }: Props) => {
   return (
     <div className="w-full h-full flex flex-row">
-      <SideBar.root className="w-64 h-full gap-5 bg-black text-white flex flex-col items-center pt-14">
-
+      <SideBar.root className="w-64 h-full gap-5 bg-black text-white flex flex-col items-center pt-5">
+        <SideBar.option href={"/"}>
+          <SideBar.icon src={home} alt="Home" />
+          <SideBar.label className="text-white">
+            Home
+          </SideBar.label>
+        </SideBar.option>
         <SideBar.option href={"/emissores"}>
           <SideBar.icon src={person} alt="Person" />
           <SideBar.label className="text-white">
