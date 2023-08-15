@@ -1,5 +1,11 @@
-import Image from "next/image";
-
+'use client';
+import { useEffect } from "react"
+import { redirect } from "next/navigation"
 export default function Home() {
-  return <main></main>;
+  useEffect(()=>{
+    redirect("/app")
+  })
+  return <main>
+    Abrindo App
+  </main>
 }
