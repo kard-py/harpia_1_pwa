@@ -3,7 +3,6 @@ import Image from 'next/image'
 import React from 'react'
 import add from "../../../public/imgs/add.png"
 import printer from "../../../public/imgs/printer.png"
-import { usePathname } from 'next/navigation'
 export default function Page() {
   return (
     <main className="p-5 w-full h-full bg-zinc-100">
