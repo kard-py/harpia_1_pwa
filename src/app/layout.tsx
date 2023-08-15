@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Login from "./login/page";
+import { cookies } from "next/headers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,14 +15,13 @@ interface Props {
   children: React.ReactNode;
 }
 
-export default function RootLayout({children}: Props) {
+export default function RootLayout({ children }: Props) {
   const isAuth = true;
 
-  
   return (
     <html lang="pt-br">
       <body className={inter.className + " min-h-screen h-screen"}>
-        {isAuth ? children  : <Login />}
+        {isAuth ? children : <Login />}
       </body>
     </html>
   );
