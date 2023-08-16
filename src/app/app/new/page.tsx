@@ -279,53 +279,6 @@ export default function Page(props: Props) {
                     </>
                 }
 
-                {props.searchParams.type == "pesagens" &&
-                    <>
-                        <div className="flex gap-5">
-                            <div>
-                                <Label>Tipo da Placa</Label>
-                                <div className="rounded-md border bg-white border-input h-10 px-3">
-                                    <select
-                                        {...register("tipoPessoa", { required: true })}
-                                        className="w-fit h-full outline-none"
-                                        value={tipoPessoa}
-                                        onChange={(e) => {
-                                            setValue("placa", "")
-                                            setTipoPessoa(e.currentTarget.value);
-                                        }}
-                                    >
-                                        <option value={0}>Placa Antiga</option>
-                                        <option value={1}>Placa Marcosul</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div className="flex flex-col w-full gap-2">
-                                {tipoPessoa == "0" ? (
-                                    <>
-                                        <Label>Placa Antiga</Label>
-                                        <InputMask
-                                            className="flex h-10 w-fit rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                            mask="aaa-9999"
-                                            alwaysShowMask={false}
-                                            placeholder="ABC-1234"
-                                            {...register("placa", { required: true, onChange: (e) => { placa(e, "antiga") } })}
-                                        />
-                                    </>
-                                ) : (
-                                    <>
-                                        <Label>Placa Marcosul</Label>
-                                        <InputMask
-                                            className="flex h-10 w-fit rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                            mask={"aaa-9a99"}
-                                            placeholder="ABC-1D23"
-                                            {...register("placa", { required: true, onChange: (e) => { placa(e, "marcossul") } })}
-                                        />
-                                    </>
-                                )}
-                            </div>
-                        </div>
-                    </>
-                }
                 {props.searchParams.type == "produtos" &&
                     <>
                     </>
