@@ -47,15 +47,32 @@ export default function Page(props: Props) {
             }
         )
     };
+    const placa = (e: any, tipo: string) => {
+        const placa = e.currentTarget.value;
+        if (tipo == "antiga") {
+            var placaReg = /^[A-Z]{1,3}-?\d{2}-?\d{2}$/
+        } else {
+            var placaReg = /^[A-Z]{3}\d{4}$/
+        }
+
+        if (!placaReg.test(placa)) {
+            return null
+        }
+
+
+        console.log("Placa Digitada");
+
+
+    }
 
     useEffect(() => {
-        if (props.searchParams.type == "emissores" || props.searchParams.type == "operadores" || props.searchParams.type == "pessagens" || props.searchParams.type == "produtos" || props.searchParams.type == "relatorios" || props.searchParams.type == "transportadoras" || props.searchParams.type == "veiculos") {
+        if (props.searchParams.type == "emissores" || props.searchParams.type == "operadores" || props.searchParams.type == "produtos" || props.searchParams.type == "relatorios" || props.searchParams.type == "transportadoras" || props.searchParams.type == "veiculos") {
             // @ts-ignore
             document.getElementById('datePicker').valueAsDate = new Date();
         }
     })
     return (
-        <main className="p-5 w-full h-full bg-zinc-100">
+        <main className="p-5 w-full h-screen bg-zinc-100 overflow-y-scroll">
             <h1 className="text-2xl font-semibold">Novo</h1>
             <form
                 className="w-full flex flex-col gap-3"
@@ -136,25 +153,7 @@ export default function Page(props: Props) {
                         </div>
                         <div className="flex w-full gap-5">
 
-                            <div className="flex flex-col w-full gap-2">
-                                <Label>Endreço</Label>
-                                <Input {...register("logaduro", { required: true })} />
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <Label>Numero da Casa</Label>
-                                <Input type="number" {...register("numero", { required: true })} />
-                            </div>
-                        </div>
-                        <div className="flex w-full h-10 gap-3">
-                            <div className="w-full gap-2">
-                                <Label>Bairro</Label>
-                                <Input {...register("bairro", { required: true })} />
-                            </div>
-                            <div className="w-2/3 gap-2">
-                                <Label>Cidade</Label>
-                                <Input {...register("cidade", { required: true })} />
-                            </div>
-                            <div className="w-2/3 gap-2">
+                            <div className="w-fit gap-2">
                                 <Label>CEP</Label>
                                 <InputMask
                                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -167,6 +166,24 @@ export default function Page(props: Props) {
                                         },
                                     })} />
 
+                            </div>
+                            <div className="flex flex-col w-full gap-2">
+                                <Label>Endreço</Label>
+                                <Input {...register("logaduro", { required: true })} />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <Label>Numero</Label>
+                                <Input type="text" {...register("numero", { required: true })} />
+                            </div>
+                        </div>
+                        <div className="flex w-full h-10 gap-3">
+                            <div className="w-full gap-2">
+                                <Label>Bairro</Label>
+                                <Input {...register("bairro", { required: true })} />
+                            </div>
+                            <div className="w-2/3 gap-2">
+                                <Label>Cidade</Label>
+                                <Input {...register("cidade", { required: true })} />
                             </div>
                             <div className="gap-2">
                                 <Label>UF</Label>
@@ -261,9 +278,62 @@ export default function Page(props: Props) {
 
                     </>
                 }
-                {props.searchParams.type == "pessagens" && <></>}
-                {props.searchParams.type == "produtos" && <></>}
-                {props.searchParams.type == "relatorios" && <></>}
+
+                {props.searchParams.type == "pesagens" &&
+                    <>
+                        <div className="flex gap-5">
+                            <div>
+                                <Label>Tipo da Placa</Label>
+                                <div className="rounded-md border bg-white border-input h-10 px-3">
+                                    <select
+                                        {...register("tipoPessoa", { required: true })}
+                                        className="w-fit h-full outline-none"
+                                        value={tipoPessoa}
+                                        onChange={(e) => {
+                                            setValue("placa", "")
+                                            setTipoPessoa(e.currentTarget.value);
+                                        }}
+                                    >
+                                        <option value={0}>Placa Antiga</option>
+                                        <option value={1}>Placa Marcosul</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="flex flex-col w-full gap-2">
+                                {tipoPessoa == "0" ? (
+                                    <>
+                                        <Label>Placa Antiga</Label>
+                                        <InputMask
+                                            className="flex h-10 w-fit rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                            mask="aaa-9999"
+                                            alwaysShowMask={false}
+                                            placeholder="ABC-1234"
+                                            {...register("placa", { required: true, onChange: (e) => { placa(e, "antiga") } })}
+                                        />
+                                    </>
+                                ) : (
+                                    <>
+                                        <Label>Placa Marcosul</Label>
+                                        <InputMask
+                                            className="flex h-10 w-fit rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                            mask={"aaa-9a99"}
+                                            placeholder="ABC-1D23"
+                                            {...register("placa", { required: true, onChange: (e) => { placa(e, "marcossul") } })}
+                                        />
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                    </>
+                }
+                {props.searchParams.type == "produtos" &&
+                    <>
+                    </>
+                }
+                {props.searchParams.type == "relatorios" &&
+                    <>
+                    </>
+                }
                 {props.searchParams.type == "transportadoras" &&
                     <>
                         <div className="w-full flex gap-5">
@@ -331,25 +401,7 @@ export default function Page(props: Props) {
                         </div>
                         <div className="flex w-full gap-5">
 
-                            <div className="flex flex-col w-full gap-2">
-                                <Label>Endreço</Label>
-                                <Input {...register("logaduro", { required: true })} />
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <Label>Numero da Casa</Label>
-                                <Input type="number" {...register("numero", { required: true })} />
-                            </div>
-                        </div>
-                        <div className="flex w-full h-10 gap-3">
-                            <div className="w-full gap-2">
-                                <Label>Bairro</Label>
-                                <Input {...register("bairro", { required: true })} />
-                            </div>
-                            <div className="w-2/3 gap-2">
-                                <Label>Cidade</Label>
-                                <Input {...register("cidade", { required: true })} />
-                            </div>
-                            <div className="w-2/3 gap-2">
+                            <div className="w-fit gap-2">
                                 <Label>CEP</Label>
                                 <InputMask
                                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -362,6 +414,24 @@ export default function Page(props: Props) {
                                         },
                                     })} />
 
+                            </div>
+                            <div className="flex flex-col w-full gap-2">
+                                <Label>Endreço</Label>
+                                <Input {...register("logaduro", { required: true })} />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <Label>Numero</Label>
+                                <Input type="text" {...register("numero", { required: true })} />
+                            </div>
+                        </div>
+                        <div className="flex w-full h-10 gap-3">
+                            <div className="w-full gap-2">
+                                <Label>Bairro</Label>
+                                <Input {...register("bairro", { required: true })} />
+                            </div>
+                            <div className="w-2/3 gap-2">
+                                <Label>Cidade</Label>
+                                <Input {...register("cidade", { required: true })} />
                             </div>
                             <div className="gap-2">
                                 <Label>UF</Label>

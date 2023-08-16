@@ -20,7 +20,7 @@ export default function RootLayout({ children }: Props) {
 
   return (
     <html lang="pt-br">
-      <body className={inter.className + " min-h-screen h-screen"}>
+      <body className={inter.className}>
         {isAuth ? children : <Login />}
       </body>
     </html>
