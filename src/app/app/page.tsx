@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
 import InputMask from "react-input-mask";
+import Link from "next/link";
 export default function Page() {
   const { register, handleSubmit } = useForm();
   const [tipoPessoa, setTipoPessoa] = useState<string>("0");
@@ -28,10 +29,12 @@ export default function Page() {
       <h1 className="text-2xl font-semibold">Home</h1>
 
       <Actions.root>
+        <Link href={"/app/new"}>
         <Actions.action>
           <Actions.icon src={add} alt="Add" />
           <Actions.label>Novo</Actions.label>
         </Actions.action>
+        </Link>
 
         <Actions.action>
           <Actions.icon src={printer} alt="Printer" />
@@ -73,14 +76,14 @@ export default function Page() {
                     onSubmit={handleSubmit(onSubmit)}
                   >
                     <div className="w-full flex gap-5">
-                      <div className="w-full gap-3">
-                        <Label>Codigo</Label>
+                      <div className="w-full h-fit gap-3 space-y-2">
+                        <Label >Codigo</Label>
                         <Input
                           type="number"
                           {...register("cod", { required: true })}
                         />
                       </div>
-                      <div className="gap-3">
+                      <div className="h-fit gap-3 space-y-2">
                         <Label>Data de Cadastro</Label>
                         <Input
                           type="date"

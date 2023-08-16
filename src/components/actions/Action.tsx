@@ -2,11 +2,12 @@ import React from "react";
 
 interface Props extends React.HTMLAttributes<HTMLButtonElement> {
   children?: React.ReactNode;
+  type?: "button" | "submit" | "reset" | undefined
 }
 
-const Action = ({ children, ...res }: Props) => {
+const Action = ({ children, type, ...res }: Props) => {
   return (
-    <button className="flex flex-col items-center" {...res}>
+    <button type={type} className="flex flex-col items-center" {...res}>
       {children}
     </button>
   );
