@@ -1,19 +1,42 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import add from "../../../../public/imgs/add.png";
 import printer from "../../../../public/imgs/printer.png";
-import { usePathname } from "next/navigation";
 import Actions from "@/components/actions";
 import Table from "@/components/table";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { usePathname } from "next/navigation";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+
 export default function Page() {
   const path: string = usePathname();
   const title: string = path.substring(5);
+
   return (
     <main className="p-5 w-full h-full bg-zinc-100">
       <h1 className="text-2xl font-semibold">
         {title[0].toUpperCase() + title.substring(1)}
       </h1>
-
       <Actions.root>
         <Actions.action>
           <Actions.icon src={add} alt="Add" />
@@ -37,20 +60,41 @@ export default function Page() {
           <Table.headCol className="px-6 py-3 text-left text-xs whitespace-nowrap font-medium text-gray-500 uppercase tracking-wider w-4/5">
             Nome
           </Table.headCol>
+          <Table.headCol className="px-6 py-3 text-left text-xs whitespace-nowrap font-medium text-gray-500 uppercase tracking-wider w-4/5">
+            Ações
+          </Table.headCol>
         </Table.head>
         <Table.body>
           <Table.line>
             <Table.col>1</Table.col>
             <Table.col>15/08/2023</Table.col>
             <Table.col>Regina Clara Tânia Oliveira</Table.col>
-          </Table.line>
-          <Table.line>
-            <Table.col>1</Table.col>
-            <Table.col>15/08/2023</Table.col>
-            <Table.col>Regina Clara Tânia Oliveira</Table.col>
+            <Table.col>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button>Editar</Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Editar</DialogTitle>
+                  </DialogHeader>
+                </DialogContent>
+              </Dialog>
+            </Table.col>
           </Table.line>
         </Table.body>
       </Table.root>
     </main>
   );
+}
+function zodResolver(
+  formSchema: z.ZodObject<
+    { username: z.ZodString },
+    "strip",
+    z.ZodTypeAny,
+    { username: string },
+    { username: string }
+  >
+): import("react-hook-form").Resolver<{ username: string }, any> | undefined {
+  throw new Error("Function not implemented.");
 }
