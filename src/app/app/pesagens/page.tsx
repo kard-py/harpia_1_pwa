@@ -36,7 +36,7 @@ export default function Page() {
 
 
       <Actions.root>
-        <Link href={"/app/new?type=produtos"}>
+        <Link href={"/app/new?type=pesagens"}>
           <Actions.action>
             <Actions.icon src={add} alt="Add" />
             <Actions.label>Novo</Actions.label>

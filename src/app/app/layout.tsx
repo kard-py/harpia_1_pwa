@@ -6,6 +6,7 @@ import box from "../../../public/imgs/box.png";
 import printer from "../../../public/imgs/printer.png";
 import car from "../../../public/imgs/car.png";
 import home from "../../../public/imgs/home.png";
+import scales from "../../../public/imgs/scales.png";
 interface Props {
   children: ReactNode;
 }
@@ -38,8 +39,8 @@ const Root = ({ children }: Props) => {
           <SideBar.icon src={box} alt="Box" />
           <SideBar.label className="text-white">Produtos</SideBar.label>
         </SideBar.option>
-        <SideBar.option href={"/passagens"}>
-          <SideBar.icon src={truck} alt="Truck" />
+        <SideBar.option href={"/pesagens"}>
+          <SideBar.icon src={scales} alt="Scales" />
           <SideBar.label className="text-white">Pesagens</SideBar.label>
         </SideBar.option>
         <SideBar.option href={"/relatorio"}>
