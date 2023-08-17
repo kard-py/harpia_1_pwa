@@ -10,16 +10,21 @@ import { useForm } from "react-hook-form";
 import InputMask from "react-input-mask";
 import Link from "next/link";
 import { Textarea } from "@/components/ui/textarea";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 interface Props {
     params: {}
     searchParams: {
-        type: string
+        type: string,
+        id?: string,
+        edit?: string
     }
 }
 export default function Page(props: Props) {
+    const router = useRouter();
+    console.log(props);
+
     if (!props.searchParams.type) {
-        redirect("/app")
+        router.back()
     }
     const { register, handleSubmit, setValue } = useForm();
     const [tipoPessoa, setTipoPessoa] = useState<string>("0");
@@ -58,8 +63,6 @@ export default function Page(props: Props) {
         if (!placaReg.test(placa)) {
             return null
         }
-
-
         console.log("Placa Digitada");
 
 
@@ -85,12 +88,12 @@ export default function Page(props: Props) {
                         <Actions.label>Salvar</Actions.label>
                     </Actions.action>
 
-                    <Link href={"/app"}>
-                        <Actions.action>
-                            <Actions.icon src={x} alt="X" />
-                            <Actions.label>Cancelar</Actions.label>
-                        </Actions.action>
-                    </Link>
+
+                    <Actions.action onClick={(e) => { e.preventDefault(); router.back() }}>
+                        <Actions.icon src={x} alt="X" />
+                        <Actions.label>Cancelar</Actions.label>
+                    </Actions.action>
+
                 </Actions.root>
 
                 {props.searchParams.type == "emissores" &&

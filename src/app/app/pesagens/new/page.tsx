@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import save from "../../../../../public/imgs/save.png";
+import manual from "../../../../../public/imgs/manual.png";
 import x from "../../../../../public/imgs/x.png";
 import Actions from "@/components/actions";
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,9 @@ interface Props {
 }
 export default function Page(props: Props) {
     const [tipoPlaca, setTipoPlaca] = useState<string>("0");
+    const [pesoAtual, setPesoAtual] = useState<string>("00.000,00KG")
+    const [isPesoManual, setIsPesoManual] = useState<boolean>(false)
+    const [isEditavel, setIsEditavel] = useState<boolean>(false);
     const [transportadora, setTrasportadora] = useState<string>("0");
     const { register, handleSubmit, setValue } = useForm();
     const onSubmit = (data: any) => {
@@ -29,10 +33,18 @@ export default function Page(props: Props) {
         const placa: string = e.currentTarget.value;
 
         if (placa[placa.length - 1] == "_") {
+            setPesoAtual("00.000,00KG")
+            setIsEditavel(false)
             return null
         }
+        setIsEditavel(true)
+        if (isPesoManual) { return null; }
 
-        // Consulta da Placa Por Aqui
+        setPesoAtual("14.000,00KG")
+
+
+
+
     }
 
 
@@ -56,12 +68,13 @@ export default function Page(props: Props) {
                             <Actions.label>Cancelar</Actions.label>
                         </Actions.action>
                     </Link>
+                    <Actions.action onClick={(e) => { setIsPesoManual(!isPesoManual) }}>
+                        <Actions.icon src={manual} alt="Manual" />
+                        <Actions.label>Manual</Actions.label>
+                    </Actions.action>
                 </Actions.root>
-
                 <div className="flex flex-row w-full gap-10 h-full">
-
                     <div className="flex flex-col w-fit gap-3 h-full">
-
                         <div className="flex flex-row justify-between gap-4 w-96">
                             <div className="flex flex-col w-fit justify-center-center gap-2">
                                 <Label>Tipo da Placa</Label>
@@ -109,6 +122,7 @@ export default function Page(props: Props) {
                             <Label>Nome do Motorista</Label>
                             <Input
                                 className="w-96"
+                                disabled={!isEditavel}
                                 {...register("motorista", { required: true, onChange: (e) => { placa(e, "antiga") } })}
                             />
                         </div>
@@ -117,6 +131,8 @@ export default function Page(props: Props) {
                             <div className="rounded-md border bg-white border-input w-96 h-10 px-3">
                                 <select
                                     {...register("transportadora", { required: true })}
+                                    disabled={!isEditavel}
+
                                     className="w-full h-full outline-none"
                                     value={transportadora}
                                     onChange={(e) => {
@@ -130,15 +146,17 @@ export default function Page(props: Props) {
                         </div>
 
                     </div>
-
                     <div className="flex flex-col w-fit h-full">
-
+                        <div className="flex flex-col gap-2">
+                            <Label className="text-xl font-semibold">Peso em KG</Label>
+                            <InputMask
+                                className="flex w-56 h-20 select-none text-end text-xl disabled:text-black rounded-md border border-input bg-background px-3 py-2 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                mask="99.999,99 KG"
+                                alwaysShowMask={false} disabled={!isPesoManual} value={pesoAtual} onChange={(e) => { setPesoAtual(e.currentTarget.value) }} />
+                        </div>
                     </div>
                 </div>
-
-
             </form>
-
         </main>
     );
 }
