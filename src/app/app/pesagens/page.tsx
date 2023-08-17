@@ -15,7 +15,6 @@ export default function Page() {
         {title[0].toUpperCase() + title.substring(1)}
       </h1>
 
-
       <Actions.root>
         <Link href={"/app/pesagens/new"}>
           <Actions.action>
@@ -51,7 +50,7 @@ export default function Page() {
             <Table.col>15/08/2023</Table.col>
             <Table.col>Regina Clara Tânia Oliveira</Table.col>
             <Table.col>
-              <Link href={"/app/pesagens/new?type=veiculos&edit=true&id=1"}>
+              <Link href={"/app/pesagens/new?edit=true&id=1"}>
                 <Button>Editar</Button>
               </Link>
             </Table.col>

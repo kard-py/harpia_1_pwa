@@ -14,7 +14,7 @@ interface Props {
 const Root = ({ children }: Props) => {
   return (
     <div className="w-full h-full flex flex-row">
-      <SideBar.root className="md:w-64 w-0 h-screen overflow-y-scroll gap-5 bg-black text-white flex flex-col items-center pt-5">
+      <SideBar.root className="md:w-64 w-0 h-screen overflow-y-scroll overflow-x-hidden gap-5 bg-black text-white flex flex-col items-center pt-5">
         <SideBar.option href={"/app"}>
           <SideBar.icon src={home} alt="Home" />
           <SideBar.label className="text-white">Home</SideBar.label>
@@ -44,9 +44,7 @@ const Root = ({ children }: Props) => {
           <SideBar.label className="text-white">Pesagens</SideBar.label>
         </SideBar.option>
       </SideBar.root>
-      <div className="overflow-y-scroll w-full h-screen">
-        {children}
-      </div>
+      <div className="overflow-y-scroll w-full h-screen">{children}</div>
     </div>
   );
 };
