@@ -33,7 +33,7 @@ func ManipularWebsocket(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/serial", ManipularWebsocket)
+	http.HandleFunc("/hello", ManipularWebsocket)
 	fmt.Println("WebSocket rodando na porta :3010")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":3010", nil))
 }
