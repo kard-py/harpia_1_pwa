@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 import person from "../../../public/imgs/person.png";
 import truck from "../../../public/imgs/truck.png";
 import box from "../../../public/imgs/box.png";
-import printer from "../../../public/imgs/printer.png";
+import book from "../../../public/imgs/book.png";
 import car from "../../../public/imgs/car.png";
 import home from "../../../public/imgs/home.png";
 import scales from "../../../public/imgs/scales.png";
@@ -43,6 +43,10 @@ const Root = ({ children }: Props) => {
           <SideBar.icon src={scales} alt="Scales" />
           <SideBar.label className="text-white">Pesagens</SideBar.label>
         </SideBar.option>
+        <SideBar.option href={"/app/manual"}>
+          <SideBar.icon src={book} alt="Book" />
+          <SideBar.label className="text-white">Manual</SideBar.label>
+        </SideBar.option>        
       </SideBar.root>
       <div className="overflow-y-scroll w-full h-screen">{children}</div>
     </div>

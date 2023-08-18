@@ -1,26 +1,61 @@
-"use client";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
-import arrowLeft from "../../../public/imgs/arrowLeft.png";
+import box from "../../../public/imgs/box.png"
+import truck from "../../../public/imgs/truck.png"
+import scales from "../../../public/imgs/scales.png"
 
 export default function Page() {
-
-
-
   return (
-    <main className="p-5 w-full min-h-screen h-full bg-zinc-100 ">
+    <main className="p-5 w-full min-h-screen h-full">
       <h1 className="text-2xl font-semibold">Home</h1>
-      <div className="flex items-center gap-5 w-full h-full justify-center">
-        <div className="w-10">
-          <Image src={arrowLeft} alt="Arrow" />
-        </div>
-        <h3 className="font-semibold">Selecione Uma Opção ao lado para iniciar</h3>
+      <div className="grid grid-cols-3 gap-5 py-5">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-md font-semibold">
+              Produtos
+            </CardTitle>
+            <div className="w-10">
+              <Image src={box} alt="" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">+2350</div>
+
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-md font-semibold">
+              Transportadoras
+            </CardTitle>
+            <div className="w-10">
+              <Image src={truck} alt="" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">+320</div>
+
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-md font-semibold">
+              Pesagens
+            </CardTitle>
+            <div className="w-10">
+              <Image src={scales} alt="" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">+2350</div>
+
+          </CardContent>
+        </Card>
+      </div >
+      <div>
+        
       </div>
-
-
-
-
-
-
-    </main>
+    </main >
   );
 }
