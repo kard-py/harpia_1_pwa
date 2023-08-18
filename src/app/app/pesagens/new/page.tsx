@@ -80,6 +80,7 @@ export default function Page(props: Props) {
           setPesoEntrada(0)
           setPesoSaida(0)
           setTrasportadora("default");
+          setMotorista("");
           setProduto("default");
           setPlaca("")
           // @ts-ignore
