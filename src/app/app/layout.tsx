@@ -46,7 +46,7 @@ const Root = ({ children }: Props) => {
         <SideBar.option href={"/app/manual"}>
           <SideBar.icon src={book} alt="Book" />
           <SideBar.label className="text-white">Manual</SideBar.label>
-        </SideBar.option>        
+        </SideBar.option>
       </SideBar.root>
       <div className="overflow-y-scroll w-full h-screen">{children}</div>
     </div>

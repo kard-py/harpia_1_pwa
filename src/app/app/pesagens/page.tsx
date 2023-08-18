@@ -1,18 +1,17 @@
-"use client";
+
 import add from "../../../../public/imgs/add.png";
 import printer from "../../../../public/imgs/printer.png";
 import Actions from "@/components/actions";
 import Table from "@/components/table";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-export default function Page() {
-  const path: string = usePathname();
-  const title: string = path.substring(5);
+export default async function Page() {
+
+
   return (
     <main className="p-5 w-full h-full bg-zinc-100">
       <h1 className="text-2xl font-semibold">
-        {title[0].toUpperCase() + title.substring(1)}
+        Pesagens
       </h1>
 
       <Actions.root>
@@ -45,18 +44,20 @@ export default function Page() {
           </Table.headCol>
         </Table.head>
         <Table.body>
+
           <Table.line>
             <Table.col>1</Table.col>
             <Table.col>15/08/2023</Table.col>
-            <Table.col>Regina Clara Tânia Oliveira</Table.col>
+            <Table.col>Teste</Table.col>
             <Table.col>
-              <Link href={"/app/pesagens/new?edit=true&id=1"}>
+              <Link href={`/app/pesagens/new?edit=true`}>
                 <Button>Editar</Button>
               </Link>
             </Table.col>
           </Table.line>
+
         </Table.body>
       </Table.root>
-    </main>
+    </main >
   );
 }
