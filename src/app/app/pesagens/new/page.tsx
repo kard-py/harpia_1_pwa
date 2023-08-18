@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import save from "../../../../../public/imgs/save.png";
 import manual from "../../../../../public/imgs/manual.png";
 import x from "../../../../../public/imgs/x.png";
@@ -20,18 +20,14 @@ interface Props {
   };
 }
 
-
-
-
-
 export default function Page(props: Props) {
-
+  const formRef = useRef(null)
   const [placa, setPlaca] = useState<string>("");
   const [motorista, setMotorista] = useState<string>("");
   const [tipoPlaca, setTipoPlaca] = useState<string>("0");
   const [isPesoManual, setIsPesoManual] = useState<boolean>(false);
-  const [isEditavel, setIsEditavel] = useState<boolean>(false);
   const [transportadora, setTrasportadora] = useState<string>("default");
+  const [produto, setProduto] = useState<string>("default");
 
 
   const [pesoAtual, setPesoAtual] = useState<number>(0)
@@ -39,19 +35,29 @@ export default function Page(props: Props) {
   const [pesoEntrada, setPesoEntrada] = useState<number>(0)
 
   useEffect(() => {
+    document.getElementById("form")?.addEventListener("keypress", (e) => {
+      if (e?.key == "Enter") {
+        e.preventDefault()
+      }
+    })
     setInterval(() => {
       setPesoAtual((value) => value + 5)
     }, 1000)
   })
 
-  const placaChange = (e: any) => {
-    const value: string = e.currentTarget.value
-    if (value.substring(7) == "_") {
-      setIsEditavel(false);
-      return null;
-    }
-    setIsEditavel(true)
-    setPesoEntrada(value => pesoAtual)
+  const placaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.currentTarget;
+    setPlaca(a => input.value)
+    input.addEventListener("keypress", (key: KeyboardEvent) => {
+      if (key.key != "Enter") { return null }
+      setPesoEntrada(value => pesoAtual)
+    })
+    input.addEventListener("blur", (e) => {
+      if (input.value[input.value.length - 1] != "_") {
+        setPesoEntrada(value => pesoAtual)
+      }
+    })
+
   }
 
   const registrarSaida = (e: any) => {
@@ -59,12 +65,28 @@ export default function Page(props: Props) {
     setPesoSaida(value => pesoAtual)
   }
 
+
+
   return (
     <main className="p-5 w-full h-screen bg-zinc-100 overflow-y-scroll" id="main">
       <h1 className="text-2xl font-semibold">Nova Pesagem</h1>
       <form
+        id="form"
         className="w-full flex flex-col gap-3"
-        action={handleSave}
+        action={async (forData) => {
+          if (pesoEntrada == 0) {
+            return null;
+          }
+          setPesoEntrada(0)
+          setPesoSaida(0)
+          setTrasportadora("default");
+          setProduto("default");
+          setPlaca("")
+          // @ts-ignore
+          formRef.current.reset()
+          await handleSave(forData)
+        }}
+        ref={formRef}
       >
         <Actions.root>
           <Actions.action type="submit" id="save" tabIndex={4}>
@@ -100,6 +122,7 @@ export default function Page(props: Props) {
                       name="tipoPlaca"
                       className="w-full h-full outline-none"
                       value={tipoPlaca}
+                      required
                       onChange={(e) => {
                         setPlaca("")
                         setTipoPlaca(e.currentTarget.value);
@@ -140,17 +163,18 @@ export default function Page(props: Props) {
                       />
                     </>
                   )}
+
                 </div>
               </div>
               <div className="flex flex-col w-full gap-2">
                 <Label>Nome do Motorista</Label>
                 <Input
+                  required
                   tabIndex={2}
                   className="w-96"
-                  disabled={!isEditavel}
                   name="motorista"
                   value={motorista}
-                  onChange={(v: any) => setMotorista(value => v.currentTarget?.value)}
+                  onChange={(v: any) => setMotorista(v.currentTarget?.value)}
                 />
               </div>
               <div className="mb-2">
@@ -159,8 +183,7 @@ export default function Page(props: Props) {
                   <select
                     name="transportadora"
                     tabIndex={3}
-
-                    disabled={!isEditavel}
+                    required
                     className="w-full h-full outline-none"
                     value={transportadora}
                     defaultValue={"default"}
@@ -174,6 +197,25 @@ export default function Page(props: Props) {
                   </select>
                 </div>
               </div>
+              <div className="mb-2">
+                <Label>Produto</Label>
+                <div className="rounded-md border bg-white border-input w-96 h-10 px-3">
+                  <select
+                    name="produto"
+                    tabIndex={3}
+                    className="w-full h-full outline-none"
+                    value={produto}
+                    defaultValue={"default"}
+                    onChange={(e) => {
+                      setProduto(e.currentTarget.value);
+                    }}
+                  >
+                    <option value={"default"}>Selecione um Produto</option>
+                    <option value={"milho"}>Milho</option>
+                    <option value={"soja"}>Soja</option>
+                  </select>
+                </div>
+              </div>
               <div className="flex flex-col w-full">
                 <Button tabIndex={-1} onClick={registrarSaida}>Registrar Saida</Button>
               </div>
@@ -183,7 +225,7 @@ export default function Page(props: Props) {
             <div className="flex flex-col w-fit h-full">
               <div className="flex flex-col gap-2 mb-5">
                 <Label className="text-xl font-semibold">Peso Atual em KG</Label>
-                <Input disabled value={`${pesoAtual}KG`} />
+                <Input disabled required value={`${pesoAtual}KG`} />
               </div>
               <div className="flex flex-col gap-2 mb-5">
                 <Label className="text-xl font-semibold">Entrada</Label>
@@ -191,10 +233,11 @@ export default function Page(props: Props) {
                   <Input
                     name="pesoEntrada"
                     disabled={!isPesoManual}
+                    required
                     value={pesoEntrada}
                     onChange={(v: any) => setPesoEntrada(value => v.currentTarget?.value)}
                   />
-                  {!isPesoManual ? <input className="hidden" name="pesoEntrada" value={pesoEntrada} /> : <></>}
+                  {!isPesoManual ? <input required className="hidden" name="pesoEntrada" value={pesoEntrada} /> : <></>}
                   <div className="px-5 flex rounded-md rounded-l-none border border-input items-center justify-center text-center h-full">
                     <Label>KG</Label>
                   </div>
@@ -205,11 +248,12 @@ export default function Page(props: Props) {
                 <div className="flex items-center rounded-md border border-input">
                   <Input
                     className="rounded-r-none"
+                    required
                     name="pesoSaida"
                     onChange={(v: any) => setPesoSaida(value => v.currentTarget?.value)}
                     value={pesoSaida}
                     disabled={!isPesoManual} />
-                  {!isPesoManual ? <input className="hidden" name="pesoSaida" value={pesoSaida} /> : <></>}
+                  {!isPesoManual ? <input required className="hidden" name="pesoSaida" value={pesoSaida} /> : <></>}
                   <div className="px-5 flex rounded-md rounded-l-none border border-input items-center justify-center text-center h-full">
                     <Label>KG</Label>
                   </div>

@@ -1,4 +1,3 @@
-"use client";
 import Image from "next/image";
 import exemplo1 from "../../../../public/imgs/exemplo1.png";
 import exemplo2 from "../../../../public/imgs/exemplo2.png";
@@ -15,16 +14,16 @@ export default function Page() {
                 <h3 className="font-semibold my-5">1. Tela de Visualização</h3>
                 <div className="flex p-5 gap-5 items-center">
                     <div>
-                        <Image src={exemplo1} alt="" />
+                        <Image src={exemplo1} alt="Exemplo 1" />
                     </div>
-                    <p>Esta tela é destinada exclusivamente à visualização dos registros, composta pelo nome da tela, por exemplo: "Emissores", e algumas ações como imprimir e adicionar um novo registro. Além disso, apresenta uma tabela com todos os registros daquele mesmo tipo.</p>
+                    <p>{"Esta tela é destinada exclusivamente à visualização dos registros, composta pelo nome da tela, por exemplo: 'Emissores', e algumas ações como imprimir e adicionar um novo registro. Além disso, apresenta uma tabela com todos os registros daquele mesmo tipo."}</p>
                 </div>
                 <h3 className="font-semibold my-5">2. Tela de Adição</h3>
                 <div className="flex p-5 gap-5 items-center">
                     <div>
-                        <Image src={exemplo2} alt="" />
+                        <Image src={exemplo2} alt="Exemplo 2" />
                     </div>
-                    <p>Esta tela é destinada exclusivamente à adição dos registros, composta pelo nome da tela: "Novo", e algumas ações como salvar e cancelar. Além disso, apresenta um formulario com todos os campos para o registros daquele mesmo tipo.</p>
+                    <p>{"Esta tela é destinada exclusivamente à adição dos registros, composta pelo nome da tela: 'Novo', e algumas ações como salvar e cancelar. Além disso, apresenta um formulario com todos os campos para o registros daquele mesmo tipo."}</p>
                 </div>
 
             </div>

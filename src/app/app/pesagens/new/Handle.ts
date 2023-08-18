@@ -1,6 +1,8 @@
 "use server";
 
 const handleSave = async (data: FormData) => {
+  console.log(data);
+
   const placa = data.get("placa");
   const tipoPlaca = data.get("tipoPlaca");
   const motorista = data.get("motorista");
