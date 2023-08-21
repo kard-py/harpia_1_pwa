@@ -76,7 +76,9 @@ export default function Page() {
           const msg = await handleSave(data);
           alert(msg);
 
-          clear();
+          if (msg != "Erro na Api") {
+            clear();
+          }
         }}
       >
         <Actions.root>

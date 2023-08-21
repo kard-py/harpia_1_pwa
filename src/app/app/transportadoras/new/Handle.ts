@@ -1,32 +1,58 @@
 "use server";
+import axios from "axios";
+
+interface transportadora {
+  dataDeRegistro: string;
+  nome: string;
+  nomeFantasia: string;
+  tipoPessoa: string;
+  doc: string;
+  inscricaoEstadual: string;
+  cep: string;
+  uf: string;
+  cidade: string;
+  bairro: string;
+  logradouro: string;
+  numero: string;
+  telefone1: string;
+  telefone2: string;
+  email: string;
+  observacao: string;
+}
 
 const handleSave = async (data: FormData) => {
   const url = "http://localhost:3010/transportadoras";
-  const body = {
-    dataDeRegistro: data.get("dataDeRegisto"),
-    nome: data.get("nome"),
-    nomeFantasia: data.get("nomeFantasia"),
-    tipoPessoa: data.get("tipoPessoa"),
-    doc: data.get("doc"),
-    inscricaoEstadual: data.get("inscricaoEstadual"),
-    cep: data.get("cep"),
-    logradouro: data.get("logaduro"),
-    numero: data.get("numero"),
-    bairro: data.get("bairro"),
-    cidade: data.get("cidade"),
-    uf: data.get("uf"),
-    telefone1: data.get("telefone1"),
-    telefone2: data.get("telefone2"),
-    email: data.get("email"),
-    observacao: data.get("observacao"),
+  const body: transportadora = {
+    dataDeRegistro: data.get("dataDeRegisto") as string,
+    nome: data.get("nome") as string,
+    nomeFantasia: data.get("nomeFantasia") as string,
+    tipoPessoa: data.get("tipoPessoa") as string,
+    doc: data.get("doc") as string,
+    inscricaoEstadual: data.get("inscricaoEstadual") as string,
+    cep: data.get("cep") as string,
+    logradouro: data.get("logaduro") as string,
+    numero: data.get("numero") as string,
+    bairro: data.get("bairro") as string,
+    cidade: data.get("cidade") as string,
+    uf: data.get("uf") as string,
+    telefone1: data.get("telefone1") as string,
+    telefone2: data.get("telefone2") as string,
+    email: data.get("email") as string,
+    observacao: data.get("observacao") as string,
   };
 
-  fetch(url, {
-    method: "post",
-    body: JSON.stringify(body),
-  })
-    .then((res) => console.log(res))
-    .catch((err) => console.log(err));
+  const r: any = await axios
+    .post(url, body)
+    .catch((err) => {
+      return { status: err.status };
+    })
+    .then((data) => data);
+
+  if (r.status == 201) {
+    return "Criado Com Sucesso";
+  } else {
+    return "Erro na Api";
+  }
 };
 
 export { handleSave };

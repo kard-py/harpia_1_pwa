@@ -1,18 +1,21 @@
 "use server";
-
 import axios from "axios";
 
-interface produto {
-  dataDeRegistro?: string;
-  nome?: string;
+interface veiculo {
+  dataDeRegistro: string;
+  tipoPlaca: string;
+  transportadoraId: string;
+  nomeMotorista: string;
 }
 
 const handleSave = async (data: FormData) => {
   const url = "http://localhost:3010/veiculos";
 
-  const body: produto = {
+  const body: veiculo = {
     dataDeRegistro: data.get("dataDeRegisto") as string,
-    nome: data.get("nome") as string,
+    nomeMotorista: data.get("motorista") as string,
+    tipoPlaca: data.get("tipoPlaca") as string,
+    transportadoraId: data.get("transportadora") as string,
   };
 
   const r: any = await axios

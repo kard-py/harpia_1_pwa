@@ -40,7 +40,7 @@ export default function Page() {
           </Table.headCol>
         </Table.head>
         <Table.body>
-          <Table.line>
+          {/* <Table.line>
             <Table.col>1</Table.col>
             <Table.col>15/08/2023</Table.col>
             <Table.col>Regina Clara Tânia Oliveira</Table.col>
@@ -49,7 +49,7 @@ export default function Page() {
                 <Button>Editar</Button>
               </Link>
             </Table.col>
-          </Table.line>
+          </Table.line> */}
         </Table.body>
       </Table.root>
     </main>

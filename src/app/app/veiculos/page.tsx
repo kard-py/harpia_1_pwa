@@ -4,7 +4,13 @@ import Actions from "@/components/actions";
 import Table from "@/components/table";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-export default function Page() {
+export default async function Page() {
+  const data = await fetch("http://localhost:3010/veiculos", { method: "get" }).catch(err => null).then(res => res);
+  if (data != null) {
+    var veiculos = await data.json();
+  } else {
+    var veiculos = null
+  }
   return (
     <main className="p-5 w-full h-full bg-zinc-100">
       <h1 className="text-2xl font-semibold">Veiculos</h1>
@@ -39,16 +45,19 @@ export default function Page() {
           </Table.headCol>
         </Table.head>
         <Table.body>
-          <Table.line>
-            <Table.col>1</Table.col>
-            <Table.col>15/08/2023</Table.col>
-            <Table.col>Regina Clara Tânia Oliveira</Table.col>
-            <Table.col>
-              <Link href={"/app/veiculos/new/1"}>
-                <Button>Editar</Button>
-              </Link>
-            </Table.col>
-          </Table.line>
+          {veiculos != null &&
+            veiculos.data.data.map((emissor: any, i: number) => (
+              <Table.line key={i}>
+                <Table.col>{i + 1}</Table.col>
+                <Table.col>{emissor.dataDeRegistro}</Table.col>
+                <Table.col>{emissor.nome}</Table.col>
+                <Table.col>
+                  <Link href={`/app/veiculos/new/${emissor.Id}`}>
+                    <Button>Editar</Button>
+                  </Link>
+                </Table.col>
+              </Table.line>
+            ))}
         </Table.body>
       </Table.root>
     </main>
