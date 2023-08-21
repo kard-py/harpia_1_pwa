@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import save from "../../../../public/imgs/save.png";
-import x from "../../../../public/imgs/x.png";
+import save from "../../../../../public/imgs/save.png";
+import x from "../../../../../public/imgs/x.png";
 import Actions from "@/components/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
