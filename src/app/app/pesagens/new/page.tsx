@@ -3,10 +3,10 @@ import React, { useEffect, useRef, useState } from "react";
 import save from "../../../../../public/imgs/save.png";
 import manual from "../../../../../public/imgs/manual.png";
 import x from "../../../../../public/imgs/x.png";
+import ok from "../../../../../public/imgs/ok.png";
 import Actions from "@/components/actions";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useForm } from "react-hook-form";
 import InputMask from "react-input-mask";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
@@ -21,54 +21,58 @@ interface Props {
 }
 
 export default function Page(props: Props) {
-  const formRef = useRef(null)
+  const formRef = useRef(null);
   const [placa, setPlaca] = useState<string>("");
   const [motorista, setMotorista] = useState<string>("");
+  const [nf, setNf] = useState<string>("");
   const [tipoPlaca, setTipoPlaca] = useState<string>("0");
   const [isPesoManual, setIsPesoManual] = useState<boolean>(false);
   const [transportadora, setTrasportadora] = useState<string>("default");
   const [produto, setProduto] = useState<string>("default");
-
-
-  const [pesoAtual, setPesoAtual] = useState<number>(0)
-  const [pesoSaida, setPesoSaida] = useState<number>(0)
-  const [pesoEntrada, setPesoEntrada] = useState<number>(0)
+  const [pesoAtual, setPesoAtual] = useState<number>(0);
+  const [pesoSaida, setPesoSaida] = useState<number>(0);
+  const [pesoEntrada, setPesoEntrada] = useState<number>(0);
+  const [enviado, setEnviado] = useState<boolean>(false);
+  const [produtos, setProdutos] = useState<any>([]);
 
   useEffect(() => {
     document.getElementById("form")?.addEventListener("keypress", (e) => {
       if (e?.key == "Enter") {
-        e.preventDefault()
+        e.preventDefault();
       }
-    })
-    setInterval(() => {
-      setPesoAtual((value) => value + 5)
-    }, 1000)
-  })
+    });
+  });
 
   const placaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.currentTarget;
-    setPlaca(a => input.value)
+    setPlaca((a) => input.value);
     input.addEventListener("keypress", (key: KeyboardEvent) => {
-      if (key.key != "Enter") { return null }
-      setPesoEntrada(value => pesoAtual)
-    })
+      if (key.key != "Enter") {
+        return null;
+      }
+      consultaPlaca(input.value);
+      setPesoEntrada((value) => pesoAtual);
+    });
     input.addEventListener("blur", (e) => {
       if (input.value[input.value.length - 1] != "_") {
-        setPesoEntrada(value => pesoAtual)
+        consultaPlaca(input.value);
+        setPesoEntrada((value) => pesoAtual);
       }
-    })
-
-  }
+    });
+  };
 
   const registrarSaida = (e: any) => {
-    e.preventDefault()
-    setPesoSaida(value => pesoAtual)
-  }
+    e.preventDefault();
+    setPesoSaida((value) => pesoAtual);
+  };
 
-
-
+  const consultaPlaca = async (placa: string) => {};
+  useEffect(() => {}, []);
   return (
-    <main className="p-5 w-full h-screen bg-zinc-100 overflow-y-scroll" id="main">
+    <main
+      className="p-5 w-full h-screen bg-zinc-100 overflow-y-scroll"
+      id="main"
+    >
       <h1 className="text-2xl font-semibold">Nova Pesagem</h1>
       <form
         id="form"
@@ -77,15 +81,20 @@ export default function Page(props: Props) {
           if (pesoEntrada == 0) {
             return null;
           }
-          setPesoEntrada(0)
-          setPesoSaida(0)
+          setPesoEntrada(0);
+          setPesoSaida(0);
           setTrasportadora("default");
           setMotorista("");
+          setNf("");
           setProduto("default");
-          setPlaca("")
+          setPlaca("");
+          setEnviado(true);
+          setTimeout(() => {
+            setEnviado(false);
+          }, 3000);
           // @ts-ignore
-          formRef.current.reset()
-          await handleSave(forData)
+          formRef.current.reset();
+          await handleSave(forData);
         }}
         ref={formRef}
       >
@@ -111,6 +120,15 @@ export default function Page(props: Props) {
             <Actions.icon src={manual} alt="Manual" />
             <Actions.label>Manual</Actions.label>
           </Actions.action>
+
+          <Actions.action
+            className={`flex flex-col items-center duration-300 select-none cursor-default ${
+              enviado ? "scale-100" : "scale-0"
+            }`}
+          >
+            <Actions.icon src={ok} alt="Ok" />
+            <Actions.label>Sucesso</Actions.label>
+          </Actions.action>
         </Actions.root>
         <div className="flex flex-row w-full gap-10 h-full">
           <Card className="p-5">
@@ -125,7 +143,7 @@ export default function Page(props: Props) {
                       value={tipoPlaca}
                       required
                       onChange={(e) => {
-                        setPlaca("")
+                        setPlaca("");
                         setTipoPlaca(e.currentTarget.value);
                       }}
                     >
@@ -147,7 +165,10 @@ export default function Page(props: Props) {
                         placeholder="ABC-1234"
                         name="placa"
                         value={placa}
-                        onChange={(v: any) => { setPlaca(value => v.currentTarget?.value); placaChange(v) }}
+                        onChange={(v: any) => {
+                          setPlaca((value) => v.currentTarget?.value);
+                          placaChange(v);
+                        }}
                       />
                     </>
                   ) : (
@@ -160,17 +181,19 @@ export default function Page(props: Props) {
                         placeholder="ABC-1D23"
                         name="placa"
                         value={placa}
-                        onChange={(v: any) => { setPlaca(value => v.currentTarget?.value); placaChange(v) }}
+                        onChange={(v: any) => {
+                          setPlaca((value) => v.currentTarget?.value);
+                          placaChange(v);
+                        }}
                       />
                     </>
                   )}
-
                 </div>
               </div>
               <div className="flex flex-col w-full gap-2">
                 <Label>Nome do Motorista</Label>
                 <Input
-                  required
+                  disabled
                   tabIndex={2}
                   className="w-96"
                   name="motorista"
@@ -183,6 +206,7 @@ export default function Page(props: Props) {
                 <div className="rounded-md border bg-white border-input w-96 h-10 px-3">
                   <select
                     name="transportadora"
+                    disabled
                     tabIndex={3}
                     required
                     className="w-full h-full outline-none"
@@ -192,7 +216,9 @@ export default function Page(props: Props) {
                       setTrasportadora(e.currentTarget.value);
                     }}
                   >
-                    <option value={"default"}>Selecione uma Transportadora</option>
+                    <option value={"default"}>
+                      Selecione uma Transportadora
+                    </option>
                     <option value={0}>Vale Delgado sla das quantas</option>
                     <option value={1}>Agroboi</option>
                   </select>
@@ -218,14 +244,18 @@ export default function Page(props: Props) {
                 </div>
               </div>
               <div className="flex flex-col w-full">
-                <Button tabIndex={-1} onClick={registrarSaida}>Registrar Saida</Button>
+                <Button tabIndex={-1} onClick={registrarSaida}>
+                  Registrar Saida
+                </Button>
               </div>
             </div>
           </Card>
           <Card className="p-5">
             <div className="flex flex-col w-fit h-full">
               <div className="flex flex-col gap-2 mb-5">
-                <Label className="text-xl font-semibold">Peso Atual em KG</Label>
+                <Label className="text-xl font-semibold">
+                  Peso Atual em KG
+                </Label>
                 <Input disabled required value={`${pesoAtual}KG`} />
               </div>
               <div className="flex flex-col gap-2 mb-5">
@@ -236,9 +266,20 @@ export default function Page(props: Props) {
                     disabled={!isPesoManual}
                     required
                     value={pesoEntrada}
-                    onChange={(v: any) => setPesoEntrada(value => v.currentTarget?.value)}
+                    onChange={(v: any) =>
+                      setPesoEntrada((value) => v.currentTarget?.value)
+                    }
                   />
-                  {!isPesoManual ? <input required className="hidden" name="pesoEntrada" value={pesoEntrada} /> : <></>}
+                  {!isPesoManual ? (
+                    <input
+                      required
+                      className="hidden"
+                      name="pesoEntrada"
+                      value={pesoEntrada}
+                    />
+                  ) : (
+                    <></>
+                  )}
                   <div className="px-5 flex rounded-md rounded-l-none border border-input items-center justify-center text-center h-full">
                     <Label>KG</Label>
                   </div>
@@ -251,15 +292,38 @@ export default function Page(props: Props) {
                     className="rounded-r-none"
                     required
                     name="pesoSaida"
-                    onChange={(v: any) => setPesoSaida(value => v.currentTarget?.value)}
+                    onChange={(v: any) =>
+                      setPesoSaida((value) => v.currentTarget?.value)
+                    }
                     value={pesoSaida}
-                    disabled={!isPesoManual} />
-                  {!isPesoManual ? <input required className="hidden" name="pesoSaida" value={pesoSaida} /> : <></>}
+                    disabled={!isPesoManual}
+                  />
+                  {!isPesoManual ? (
+                    <input
+                      required
+                      className="hidden"
+                      name="pesoSaida"
+                      value={pesoSaida}
+                    />
+                  ) : (
+                    <></>
+                  )}
                   <div className="px-5 flex rounded-md rounded-l-none border border-input items-center justify-center text-center h-full">
                     <Label>KG</Label>
                   </div>
                 </div>
-
+              </div>
+            </div>
+          </Card>
+          <Card className="p-5">
+            <div className="flex flex-col w-fit h-full">
+              <div className="flex flex-col gap-2 mb-5">
+                <Label className="text-xl font-semibold">NF</Label>
+                <Input
+                  name="nf"
+                  value={nf}
+                  onChange={(e) => setNf(e.currentTarget.value)}
+                />
               </div>
             </div>
           </Card>

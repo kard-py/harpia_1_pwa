@@ -1,42 +1,16 @@
-"use client";
-
-import React, { useState } from "react";
 import add from "../../../../public/imgs/add.png";
 import printer from "../../../../public/imgs/printer.png";
 import Actions from "@/components/actions";
 import Table from "@/components/table";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useForm } from "react-hook-form";
-import InputMask from "react-input-mask";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 export default function Page() {
-  const path: string = usePathname();
-  const title: string = path.substring(5);
-  const { register, handleSubmit } = useForm();
-  const [tipoPessoa, setTipoPessoa] = useState<string>("0");
-  const onSubmit = (data: any) => {
-    console.log(data);
-  };
   return (
     <main className="p-5 w-full h-full bg-zinc-100">
-      <h1 className="text-2xl font-semibold">
-        {title[0].toUpperCase() + title.substring(1)}
-      </h1>
-
+      <h1 className="text-2xl font-semibold">Transportadoras</h1>
 
       <Actions.root>
-        <Link href={"/app/new?type=transportadoras"}>
+        <Link href={"/app/transportadoras/new"}>
           <Actions.action>
             <Actions.icon src={add} alt="Add" />
             <Actions.label>Novo</Actions.label>
@@ -70,8 +44,7 @@ export default function Page() {
             <Table.col>15/08/2023</Table.col>
             <Table.col>Regina Clara Tânia Oliveira</Table.col>
             <Table.col>
-              <Link href={"/app/new?type=transportadoras&edit=true&id=1"}>
-
+              <Link href={"/app/transportadoras/new/1"}>
                 <Button>Editar</Button>
               </Link>
             </Table.col>

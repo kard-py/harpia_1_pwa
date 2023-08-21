@@ -8,6 +8,7 @@ const handleSave = async (data: FormData) => {
   const motorista = data.get("motorista");
   const pesoSaida = data.get("pesoSaida");
   const pesoEntrada = data.get("pesoEntrada");
+  const nf = data.get("nf");
 };
 
 export { handleSave };
