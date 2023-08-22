@@ -11,6 +11,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import { handleSave } from "./Handle";
 
+import swal from "sweetalert2";
+
 export default function Page() {
   const router = useRouter();
   const [uf, setUf] = useState<string>("");
@@ -62,6 +64,7 @@ export default function Page() {
     // @ts-ignore
     document.getElementById("datePicker").valueAsDate = new Date();
   };
+
   useEffect(() => {
     // @ts-ignore
     document.getElementById("datePicker").valueAsDate = new Date();
@@ -74,9 +77,16 @@ export default function Page() {
         className="w-full flex flex-col gap-3"
         action={async (data: FormData) => {
           const msg = await handleSave(data);
-          alert(msg);
-
-          clear();
+          if (msg == "Criado Com Sucesso") {
+            swal.fire(
+              "Emissor Crido Com Sucesso",
+              "Estamos Limpando os Campos",
+              "success"
+            );
+            clear();
+          } else {
+            swal.fire("Erro", "Verifique as Informações", "error");
+          }
         }}
       >
         <Actions.root>
