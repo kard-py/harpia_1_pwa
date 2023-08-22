@@ -11,6 +11,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import { handleSave } from "./Handle";
 
+import swal from "sweetalert2"
+
+
 export default function Page() {
   const router = useRouter();
   const [tipoPessoa, setTipoPessoa] = useState<string>("0");
@@ -44,10 +47,28 @@ export default function Page() {
       });
   };
 
+  const clear = () => {
+    document.getElementById("clear")?.click();
+    setBairro("");
+    setCidade("");
+    setLogadouro("");
+    setUf("");
+    // @ts-ignore
+    document.getElementById("datePicker").valueAsDate = new Date();
+  };
   return (
     <main className="p-5 w-full h-screen bg-zinc-100 overflow-y-scroll">
       <h1 className="text-2xl font-semibold">Novo</h1>
-      <form className="w-full flex flex-col gap-3" action={handleSave}>
+      <form className="w-full flex flex-col gap-3" action={async (data: FormData) => {
+        const msg = await handleSave(data);
+        alert(msg);
+        if (msg != "Erro na Api") {
+          swal.fire('Boa!', 'Deu tudo certo!', 'success')
+          clear();
+        } else {
+          swal.fire('Oh no...', 'Algo deu errado!', 'error')
+        }
+      }}>
         <Actions.root>
           <Actions.action type="submit">
             <Actions.icon src={save} alt="Save" />
@@ -205,6 +226,11 @@ export default function Page() {
         <div className="flex flex-col w-full gap-2">
           <Label>Observações</Label>
           <Textarea name={"observacao"} rows={10} className="resize-none" />
+        </div>
+        <div className="hidden">
+          <button type="reset" id="clear">
+            Limpar Campos
+          </button>
         </div>
       </form>
     </main>

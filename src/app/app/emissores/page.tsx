@@ -6,8 +6,12 @@ import Table from "@/components/table";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 export default async function Page() {
-  const data = await fetch("http:localhost:3010/emissores", { method: "get" });
-  const emissores = await data.json();
+  const data = await fetch("https://3010-kardpy-harpia1-o4fe3yy6xa3.ws-us104.gitpod.io//emissores", { method: "get", cache: "no-cache" }).catch(err => null).then(res => res);
+  if (data != null) {
+    var emissores = await data.json();
+  } else {
+    var emissores = null
+  }
 
   return (
     <main className="p-5 w-full h-full bg-zinc-100">
@@ -40,7 +44,7 @@ export default async function Page() {
           </Table.headCol>
         </Table.head>
         <Table.body>
-          {emissores.data.data &&
+          {emissores != null &&
             emissores.data.data.map((emissor: any, i: number) => (
               <Table.line key={i}>
                 <Table.col>{i + 1}</Table.col>

@@ -15,6 +15,7 @@ interface Emissor {
   uf: string;
   telefone1: string;
   telefone2: string;
+  email: string;
   observacao: string;
 }
 const handleSave = async (data: FormData) => {
@@ -33,6 +34,7 @@ const handleSave = async (data: FormData) => {
     uf: data.get("uf") as string,
     telefone1: data.get("telefone1") as string,
     telefone2: data.get("telefone2") as string,
+    email: data.get("email") as string,
     observacao: data.get("observacao") as string,
   };
   const r: any = await axios

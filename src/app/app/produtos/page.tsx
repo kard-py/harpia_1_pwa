@@ -4,7 +4,13 @@ import Actions from "@/components/actions";
 import Table from "@/components/table";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-export default function Page() {
+export default async function Page() {
+  const data = await fetch("https://3010-kardpy-harpia1-o4fe3yy6xa3.ws-us104.gitpod.io/produtos", { method: "get", cache: "no-cache" }).catch(err => null).then(res => res);
+  if (data != null) {
+    var produtos = await data.json();
+  } else {
+    var produtos = null
+  }
   return (
     <main className="p-5 w-full h-full bg-zinc-100">
       <h1 className="text-2xl font-semibold">Produtos</h1>
@@ -39,16 +45,19 @@ export default function Page() {
           </Table.headCol>
         </Table.head>
         <Table.body>
-          <Table.line>
-            <Table.col>1</Table.col>
-            <Table.col>15/08/2023</Table.col>
-            <Table.col>Regina Clara Tânia Oliveira</Table.col>
-            <Table.col>
-              <Link href={"/app/produtos/new/1"}>
-                <Button>Editar</Button>
-              </Link>
-            </Table.col>
-          </Table.line>
+          {produtos != null &&
+            produtos.data.data.map((produto: any, i: number) => (
+              <Table.line key={i}>
+                <Table.col>{i + 1}</Table.col>
+                <Table.col>{produto.dataDeRegistro}</Table.col>
+                <Table.col>{produto.nome}</Table.col>
+                <Table.col>
+                  <Link href={`/app/produtos/new/${produto.Id}`}>
+                    <Button>Editar</Button>
+                  </Link>
+                </Table.col>
+              </Table.line>
+            ))}
         </Table.body>
       </Table.root>
     </main>

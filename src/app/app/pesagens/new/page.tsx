@@ -12,6 +12,7 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { handleSave } from "./Handle";
+import io from "@/services/io";
 interface Props {
   params: {};
   searchParams: {
@@ -66,8 +67,20 @@ export default function Page(props: Props) {
     setPesoSaida((value) => pesoAtual);
   };
 
-  const consultaPlaca = async (placa: string) => {};
-  useEffect(() => {}, []);
+  const consultaPlaca = async (placa: string) => { };
+  useEffect(() => {
+
+    const sw = io.init("wss://3010-kardpy-harpia1-o4fe3yy6xa3.ws-us104.gitpod.io/serial")
+    io.onOpen(sw, (e) => {
+
+    })
+    io.onMessage(sw, (e) => {
+      console.log(e);
+
+    })
+
+
+  }, []);
   return (
     <main
       className="p-5 w-full h-screen bg-zinc-100 overflow-y-scroll"
@@ -122,9 +135,8 @@ export default function Page(props: Props) {
           </Actions.action>
 
           <Actions.action
-            className={`flex flex-col items-center duration-300 select-none cursor-default ${
-              enviado ? "scale-100" : "scale-0"
-            }`}
+            className={`flex flex-col items-center duration-300 select-none cursor-default ${enviado ? "scale-100" : "scale-0"
+              }`}
           >
             <Actions.icon src={ok} alt="Ok" />
             <Actions.label>Sucesso</Actions.label>

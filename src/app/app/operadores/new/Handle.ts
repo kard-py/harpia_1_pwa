@@ -13,18 +13,10 @@ const handleSave = async (data: FormData) => {
     password: data.get("pass") as string,
   };
 
-  const r: any = await axios
+  axios
     .post(url, body)
-    .catch((err) => {
-      return { status: err.status };
-    })
-    .then((data) => data);
-
-  if (r.status == 201) {
-    return "Criado Com Sucesso";
-  } else {
-    return "Erro na Api";
-  }
+    .then((res) => console.log(res))
+    .catch((err) => console.log(err));
 };
 
 export { handleSave };
