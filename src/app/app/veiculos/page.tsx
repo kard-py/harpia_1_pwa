@@ -5,11 +5,16 @@ import Table from "@/components/table";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 export default async function Page() {
-  const data = await fetch("https://3010-kardpy-harpia1-o4fe3yy6xa3.ws-us104.gitpod.io/veiculos", { method: "get", cache: "no-cache" }).catch(err => null).then(res => res);
+  const data = await fetch("http://localhost:3010/veiculos", {
+    method: "get",
+    cache: "no-cache",
+  })
+    .catch((err) => null)
+    .then((res) => res);
   if (data != null) {
     var veiculos = await data.json();
   } else {
-    var veiculos = null
+    var veiculos = null;
   }
   return (
     <main className="p-5 w-full h-full bg-zinc-100">
