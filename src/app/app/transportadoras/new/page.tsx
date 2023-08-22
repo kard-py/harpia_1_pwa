@@ -61,7 +61,6 @@ export default function Page() {
       <h1 className="text-2xl font-semibold">Novo</h1>
       <form className="w-full flex flex-col gap-3" action={async (data: FormData) => {
         const msg = await handleSave(data);
-        alert(msg);
         if (msg != "Erro na Api") {
           swal.fire('Boa!', 'Deu tudo certo!', 'success')
           clear();
