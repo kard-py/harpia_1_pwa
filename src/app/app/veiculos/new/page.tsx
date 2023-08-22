@@ -134,7 +134,7 @@ export default function Page() {
                   >
                     {
                       transportadoras != null && transportadoras.map((trans: any, i: number) => (
-                        <option value={trans.id}>{trans.nome}</option>
+                        <option key={i} value={trans.id}>{trans.nome}</option>
                       ))
                     }
 
