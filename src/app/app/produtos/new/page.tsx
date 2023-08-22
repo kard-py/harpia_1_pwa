@@ -8,15 +8,14 @@ import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { handleSave } from "./Handle";
 
-import swal from "sweetalert2"
-
+import swal from "sweetalert2";
 
 export default function Page() {
   const router = useRouter();
   useEffect(() => {
     // @ts-ignore
     document.getElementById("datePicker").valueAsDate = new Date();
-  })
+  });
 
   const clear = () => {
     document.getElementById("clear")?.click();
@@ -26,16 +25,19 @@ export default function Page() {
   return (
     <main className="p-5 w-full h-screen bg-zinc-100 overflow-y-scroll">
       <h1 className="text-2xl font-semibold">Novo</h1>
-      <form className="w-full flex flex-col gap-3" action={async (data: FormData) => {
-        const msg = await handleSave(data);
-        alert(msg);
-        if (msg != "Erro na Api") {
-          swal.fire('Boa!', 'Deu tudo certo!', 'success')
-          clear();
-        } else {
-          swal.fire('Oh no...', 'Algo deu errado!', 'error')
-        }
-      }}>
+      <form
+        className="w-full flex flex-col gap-3"
+        action={async (data: FormData) => {
+          const msg = await handleSave(data);
+          alert(msg);
+          if (msg != "Erro na Api") {
+            swal.fire("Boa!", "Deu tudo certo!", "success");
+            clear();
+          } else {
+            swal.fire("Oh no...", "Algo deu errado!", "error");
+          }
+        }}
+      >
         <Actions.root>
           <Actions.action type="submit">
             <Actions.icon src={save} alt="Save" />

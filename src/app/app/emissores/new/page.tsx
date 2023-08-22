@@ -11,8 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import { handleSave } from "./Handle";
 
-import swal from "sweetalert2"
-
+import swal from "sweetalert2";
 
 export default function Page() {
   const router = useRouter();
@@ -77,13 +76,12 @@ export default function Page() {
         className="w-full flex flex-col gap-3"
         action={async (data: FormData) => {
           const msg = await handleSave(data);
-          alert(msg);
 
           if (msg != "Erro na Api") {
-            swal.fire('Boa!', 'Deu tudo certo!', 'success')
+            swal.fire("Boa!", "Deu tudo certo!", "success");
             clear();
           } else {
-            swal.fire('Oh no...', 'Algo deu errado!', 'error')
+            swal.fire("Oh no...", "Algo deu errado!", "error");
           }
         }}
       >
