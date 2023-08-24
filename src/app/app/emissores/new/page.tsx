@@ -81,7 +81,7 @@ export default function Page() {
             swal.fire("Boa!", "Deu tudo certo!", "success");
             clear();
           } else {
-            swal.fire("Oh no...", "Algo deu errado!", "error");
+            swal.fire("Erro", "Preencha Todos Os Campos!", "error");
           }
         }}
       >

@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import add from "../../../../public/imgs/add.png";
 import printer from "../../../../public/imgs/printer.png";
@@ -5,17 +6,18 @@ import Actions from "@/components/actions";
 import Table from "@/components/table";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-export default async function Page() {
-  const data = await fetch("http://localhost:3010/emissores", {
-    method: "get",
-    cache: "no-cache",
-  })
-    .catch((err) => null)
-    .then((res) => res);
-  if (data != null) {
-    var emissores = await data.json();
-  } else {
-    var emissores = null;
+import { useQuery } from "@tanstack/react-query";
+import api from "@/services/api";
+import Loading from "../loading";
+export default function Page() {
+  const { data, isLoading } = useQuery({
+    queryKey: ["emissores"],
+    queryFn: async () => {
+      return await api.get("/emissores");
+    },
+  });
+  if (isLoading) {
+    return <Loading />;
   }
 
   return (
@@ -49,14 +51,14 @@ export default async function Page() {
           </Table.headCol>
         </Table.head>
         <Table.body>
-          {/* {emissores != null &&
-            emissores.data.data.map((emissor: any, i: number) => (
+          {/* {data != null &&
+            data.data.data.map((item: any, i: number) => (
               <Table.line key={i}>
                 <Table.col>{i + 1}</Table.col>
-                <Table.col>{emissor.dataDeRegistro}</Table.col>
-                <Table.col>{emissor.nome}</Table.col>
+                <Table.col>{item.dataDeRegistro}</Table.col>
+                <Table.col>{item.nome}</Table.col>
                 <Table.col>
-                  <Link href={`/app/emissores/new/${emissor.Id}`}>
+                  <Link href={`/app/itemes/new/${item.Id}`}>
                     <Button>Editar</Button>
                   </Link>
                 </Table.col>

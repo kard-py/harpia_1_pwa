@@ -1,5 +1,6 @@
 "use server";
 
+import api from "@/services/api";
 import axios from "axios";
 
 interface Emissor {
@@ -37,14 +38,8 @@ const handleSave = async (data: FormData) => {
     email: data.get("email") as string,
     observacao: data.get("observacao") as string,
   };
-  const r: any = await axios
-    .post(url, body)
-    .catch((err) => {
-      return { status: err.status };
-    })
-    .then((data) => data);
-
-  if (r.status == 201) {
+  const r: any = api.post("/emissores", body);
+  if (r.data != undefined) {
     return "Criado Com Sucesso";
   } else {
     return "Erro na Api";
