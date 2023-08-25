@@ -45,7 +45,7 @@ export default function Page() {
           <Table.headCol className="px-6 py-3 text-left text-xs whitespace-nowrap font-medium text-gray-500 uppercase tracking-wider w-1/5">
             Data de Cadastro
           </Table.headCol>
-         
+
           <Table.headCol className="px-6 py-3 text-left text-xs whitespace-nowrap font-medium text-gray-500 uppercase tracking-wider w-4/5">
             Nome
           </Table.headCol>
@@ -54,13 +54,13 @@ export default function Page() {
           </Table.headCol>
         </Table.head>
         <Table.body>
-          {data.data.data.map((item: any, i: number) => (
+          {data.data.data != null && data.data.data.map((item: any, i: number) => (
             <Table.line key={i}>
               <Table.col>{i + 1}</Table.col>
               <Table.col>{item.dataDeRegistro}</Table.col>
               <Table.col>{item.nome}</Table.col>
               <Table.col>
-                <Link href={`/app/itemes/new/${item.Id}`}>
+                <Link href={`/app/transportadoras/new?edit=${item.id}`}>
                   <Button>Editar</Button>
                 </Link>
               </Table.col>

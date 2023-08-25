@@ -1,5 +1,5 @@
 "use server";
-import axios from "axios";
+import api from "@/services/api";
 
 interface veiculo {
   dataDeRegistro: string;
@@ -10,9 +10,6 @@ interface veiculo {
 }
 
 const handleSave = async (data: FormData) => {
-  const url =
-    "https://3010-kardpy-harpia1-o4fe3yy6xa3.ws-us104.gitpod.io/veiculos";
-
   const body: veiculo = {
     dataDeRegistro: data.get("dataDeRegisto") as string,
     nomeMotorista: data.get("motorista") as string,
@@ -21,15 +18,7 @@ const handleSave = async (data: FormData) => {
     transportadoraId: data.get("transportadora") as string,
   };
 
-  console.log(JSON.stringify(body));
-  
-  const r: any = await axios
-    .post(url, body)
-    .catch((err) => {
-      console.log(err);
-      return { status: err.status };
-    })
-    .then((data) => data);
+  const r: any = await api.post("/veiculos", body);
 
   if (r.status == 201) {
     return "Criado Com Sucesso";

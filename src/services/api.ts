@@ -17,9 +17,9 @@ const api = {
     const res = await axios.put(url, body);
     return res.data;
   },
-  delete: async (route: string, body: any) => {
+  delete: async (route: string) => {
     const url = api.baseUrl + route;
-    const res = await axios.delete(url, body);
+    const res = await axios.delete(url);
     return res.data;
   },
 };

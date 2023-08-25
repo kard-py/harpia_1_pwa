@@ -52,18 +52,19 @@ export default function Page() {
           </Table.headCol>
         </Table.head>
         <Table.body>
-        {data.data.data.map((item: any, i: number) => (
-            <Table.line key={i}>
-              <Table.col>{i + 1}</Table.col>
-              <Table.col>{item.dataDeRegistro}</Table.col>
-              <Table.col>{item.nome}</Table.col>
-              <Table.col>
-                <Link href={`/app/itemes/new/${item.Id}`}>
-                  <Button>Editar</Button>
-                </Link>
-              </Table.col>
-            </Table.line>
-          ))}
+          {data.data.data != null &&
+            data.data.data.map((item: any, i: number) => (
+              <Table.line key={i}>
+                <Table.col>{i + 1}</Table.col>
+                <Table.col>{item.dataDeRegistro}</Table.col>
+                <Table.col>{item.nome}</Table.col>
+                <Table.col>
+                  <Link href={`/app/produtos/new?edit=${item.Id}`}>
+                    <Button>Editar</Button>
+                  </Link>
+                </Table.col>
+              </Table.line>
+            ))}
         </Table.body>
       </Table.root>
     </main>

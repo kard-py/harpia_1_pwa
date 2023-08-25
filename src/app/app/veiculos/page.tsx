@@ -62,7 +62,7 @@ export default function Page() {
               <Table.col>{item.placa}</Table.col>
               <Table.col>{item.nomeMotorista}</Table.col>
               <Table.col>
-                <Link href={`/app/itemes/new/${item.Id}`}>
+                <Link href={`/app/veiculos/new?edit=${item.Id}`}>
                   <Button>Editar</Button>
                 </Link>
               </Table.col>
