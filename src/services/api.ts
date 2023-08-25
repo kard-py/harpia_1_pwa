@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = {
-  baseUrl: "http://localhost:3010",
+  baseUrl: "https://orange-goldfish-67w99x5p69x24pgw-3010.app.github.dev",
   get: async (route: string) => {
     const url = api.baseUrl + route;
     const res = await axios.get(url);

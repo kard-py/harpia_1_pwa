@@ -1,20 +1,22 @@
+"use client";
 import add from "../../../../public/imgs/add.png";
 import printer from "../../../../public/imgs/printer.png";
 import Actions from "@/components/actions";
 import Table from "@/components/table";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-export default async function Page() {
-  const data = await fetch("http://localhost:3010/transportadoras", {
-    method: "get",
-    cache: "no-cache",
-  })
-    .catch((err) => null)
-    .then((res) => res);
-  if (data != null) {
-    var transportadoras = await data.json();
-  } else {
-    var transportadoras = null;
+import Loading from "@/app/loading";
+import api from "@/services/api";
+import { useQuery } from "@tanstack/react-query";
+export default function Page() {
+  const { data, isLoading } = useQuery({
+    queryKey: ["transportadoras"],
+    queryFn: async () => {
+      return await api.get("/transportadoras");
+    },
+  });
+  if (isLoading) {
+    return <Loading />;
   }
 
   return (
@@ -43,6 +45,7 @@ export default async function Page() {
           <Table.headCol className="px-6 py-3 text-left text-xs whitespace-nowrap font-medium text-gray-500 uppercase tracking-wider w-1/5">
             Data de Cadastro
           </Table.headCol>
+         
           <Table.headCol className="px-6 py-3 text-left text-xs whitespace-nowrap font-medium text-gray-500 uppercase tracking-wider w-4/5">
             Nome
           </Table.headCol>
@@ -51,19 +54,18 @@ export default async function Page() {
           </Table.headCol>
         </Table.head>
         <Table.body>
-          {transportadoras != null &&
-            transportadoras.data.data.map((emissor: any, i: number) => (
-              <Table.line key={i}>
-                <Table.col>{i + 1}</Table.col>
-                <Table.col>{emissor.dataDeRegistro}</Table.col>
-                <Table.col>{emissor.nome}</Table.col>
-                <Table.col>
-                  <Link href={`/app/transportadoras/new/${emissor.Id}`}>
-                    <Button>Editar</Button>
-                  </Link>
-                </Table.col>
-              </Table.line>
-            ))}
+          {data.data.data.map((item: any, i: number) => (
+            <Table.line key={i}>
+              <Table.col>{i + 1}</Table.col>
+              <Table.col>{item.dataDeRegistro}</Table.col>
+              <Table.col>{item.nome}</Table.col>
+              <Table.col>
+                <Link href={`/app/itemes/new/${item.Id}`}>
+                  <Button>Editar</Button>
+                </Link>
+              </Table.col>
+            </Table.line>
+          ))}
         </Table.body>
       </Table.root>
     </main>

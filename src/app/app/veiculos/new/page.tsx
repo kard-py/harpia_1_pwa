@@ -11,24 +11,25 @@ import { handleSave } from "./Handle";
 import { Card, CardContent } from "@/components/ui/card";
 import axios from "axios";
 
-import swal from "sweetalert2"
+import swal from "sweetalert2";
+import { useQuery } from "@tanstack/react-query";
+import api from "@/services/api";
+import Loading from "@/app/loading";
 
 export default function Page() {
   const router = useRouter();
   const [tipoPessoa, setTipoPessoa] = useState<string>("0");
   const [tipoPlaca, setTipoPlaca] = useState<string>("0");
-  const [transportadoras, setTrasportadoras] = useState<any>(null);
+  const { data: transportadoras, isLoading } = useQuery({
+    queryKey: ["transportadoras"],
+    queryFn: async () => {
+      return await api.get("/transportadoras");
+    },
+  });
 
-  useEffect(() => {
-    // @ts-ignore
-    document.getElementById("datePicker").valueAsDate = new Date();
-    fetch("https://3010-kardpy-harpia1-o4fe3yy6xa3.ws-us104.gitpod.io/transportadoras", { method: "get" }).then(res => {
-      res.json().then((json) => { setTrasportadoras(json.data.data) })
-    }).catch(err => {
-      setTrasportadoras(null)
-    })
-  }, [])
-
+  if (isLoading) {
+    return <Loading />;
+  }
   const clear = () => {
     document.getElementById("clear")?.click();
     // @ts-ignore
@@ -37,15 +38,18 @@ export default function Page() {
   return (
     <main className="p-5 w-full h-screen bg-zinc-100 overflow-y-scroll">
       <h1 className="text-2xl font-semibold">Novo</h1>
-      <form className="w-full flex flex-col gap-3" action={async (data: FormData) => {
-        const msg = await handleSave(data);
-        if (msg != "Erro na Api") {
-          swal.fire('Boa!', 'Deu tudo certo!', 'success')
-          clear();
-        } else {
-          swal.fire('Oh no...', 'Algo deu errado!', 'error')
-        }
-      }}>
+      <form
+        className="w-full flex flex-col gap-3"
+        action={async (data: FormData) => {
+          const msg = await handleSave(data);
+          if (msg != "Erro na Api") {
+            swal.fire("Boa!", "Deu tudo certo!", "success");
+            clear();
+          } else {
+            swal.fire("Oh no...", "Algo deu errado!", "error");
+          }
+        }}
+      >
         <Actions.root>
           <Actions.action type="submit">
             <Actions.icon src={save} alt="Save" />
@@ -108,7 +112,6 @@ export default function Page() {
                   <>
                     <Label>Placa Marcosul</Label>
                     <InputMask
-
                       required
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                       autoFocus
@@ -132,12 +135,11 @@ export default function Page() {
                     name={"transportadora"}
                     className="w-fit h-full outline-none"
                   >
-                    {
-                      transportadoras != null && transportadoras.map((trans: any, i: number) => (
-                        <option key={i} value={trans.id}>{trans.nome}</option>
-                      ))
-                    }
-
+                    {transportadoras.data.data.map((trans: any, i: number) => (
+                      <option key={i} value={trans.id}>
+                        {trans.nome}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>

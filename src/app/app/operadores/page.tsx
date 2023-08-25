@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import add from "../../../../public/imgs/add.png";
 import printer from "../../../../public/imgs/printer.png";
@@ -5,7 +6,21 @@ import Actions from "@/components/actions";
 import Table from "@/components/table";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+
+
+import Loading from "@/app/loading";
+import api from "@/services/api";
+import { useQuery } from "@tanstack/react-query";
 export default function Page() {
+  // const { data, isLoading } = useQuery({
+  //   queryKey: ["emissores"],
+  //   queryFn: async () => {
+  //     return await api.get("/");
+  //   },
+  // });
+  // if (isLoading) {
+  //   return <Loading />;
+  // }
   return (
     <main className="p-5 w-full h-full bg-zinc-100">
       <h1 className="text-2xl font-semibold">Operadores</h1>
@@ -40,16 +55,18 @@ export default function Page() {
           </Table.headCol>
         </Table.head>
         <Table.body>
-          {/* <Table.line>
-            <Table.col>1</Table.col>
-            <Table.col>15/08/2023</Table.col>
-            <Table.col>Regina Clara Tânia Oliveira</Table.col>
-            <Table.col>
-              <Link href={"/app/operadores/new/1"}>
-                <Button>Editar</Button>
-              </Link>
-            </Table.col>
-          </Table.line> */}
+          {/* {data.data.data.map((item: any, i: number) => (
+            <Table.line key={i}>
+              <Table.col>{i + 1}</Table.col>
+              <Table.col>{item.dataDeRegistro}</Table.col>
+              <Table.col>{item.nome}</Table.col>
+              <Table.col>
+                <Link href={`/app/itemes/new/${item.Id}`}>
+                  <Button>Editar</Button>
+                </Link>
+              </Table.col>
+            </Table.line>
+          ))} */}
         </Table.body>
       </Table.root>
     </main>
