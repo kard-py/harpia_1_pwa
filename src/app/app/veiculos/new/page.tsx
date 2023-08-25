@@ -50,13 +50,7 @@ export default function Page(props: PageProps) {
   };
 
   if (props.searchParams.edit != undefined) {
-    const { data: veiculo, isLoading } = useQuery({
-      queryKey: ["veiculos"],
-      queryFn: async () => {
-        const res = await api.get(`/veiculos/${props.searchParams.edit}`);
-        console.log(res);
-      },
-    });
+    
 
     if (isLoading) {
       return <Loading />;

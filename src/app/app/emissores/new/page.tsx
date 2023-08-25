@@ -106,10 +106,15 @@ export default function Page(props: PageProps) {
       res.data.data.observacao;
   };
 
-  if (props.searchParams.edit != undefined) {
-    useEffect(() => {
+  useEffect(() => {
+    if (props.searchParams.edit != undefined) {
       handleValues();
-    }, []);
+    } else {
+      // @ts-ignore
+      document.getElementById("datePicker").valueAsDate = new Date();
+    }
+  }, []);
+  if (props.searchParams.edit != undefined) {
     return (
       <main className="p-5 w-full h-screen bg-zinc-100 overflow-y-scroll">
         <h1 className="text-2xl font-semibold">Novo</h1>
@@ -322,10 +327,6 @@ export default function Page(props: PageProps) {
     );
   }
 
-  useEffect(() => {
-    // @ts-ignore
-    document.getElementById("datePicker").valueAsDate = new Date();
-  }, []);
   return (
     <main className="p-5 w-full h-screen bg-zinc-100 overflow-y-scroll">
       <h1 className="text-2xl font-semibold">Novo</h1>
