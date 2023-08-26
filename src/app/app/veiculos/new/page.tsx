@@ -2,12 +2,13 @@
 import React, { useEffect, useState } from "react";
 import save from "../../../../../public/imgs/save.png";
 import x from "../../../../../public/imgs/x.png";
+import trash from "../../../../../public/imgs/trash.png";
 import Actions from "@/components/actions";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import InputMask from "react-input-mask";
 import { useRouter } from "next/navigation";
-import { handleSave } from "./Handle";
+import { handleDelete, handleEdit, handleSave } from "./Handle";
 import { Card, CardContent } from "@/components/ui/card";
 import swal from "sweetalert2";
 import { useQuery } from "@tanstack/react-query";
@@ -24,6 +25,7 @@ interface PageProps {
 export default function Page(props: PageProps) {
   const router = useRouter();
   const [tipoPessoa, setTipoPessoa] = useState<string>("0");
+  const [transportadoras, setTransportadoras] = useState<any>(null);
   const [tipoPlaca, setTipoPlaca] = useState<string>("0");
   const [data, setData] = useState(new Date());
   const [dataAtual, setDataAtual] = useState<string>(
@@ -31,16 +33,7 @@ export default function Page(props: PageProps) {
       .toString()
       .padStart(2, "0")}-${data.getDate().toString().padStart(2, "0")}`
   );
-  const { data: transportadoras, isLoading } = useQuery({
-    queryKey: ["transportadoras"],
-    queryFn: async () => {
-      return await api.get("/transportadoras");
-    },
-  });
 
-  if (isLoading) {
-    return <Loading />;
-  }
   const clear = () => {
     document.getElementById("clear")?.click();
     if (document.getElementById("datePicker") != null) {
@@ -49,22 +42,49 @@ export default function Page(props: PageProps) {
     }
   };
 
-  if (props.searchParams.edit != undefined) {
-    
+  const handleValues = async () => {
+    const res = await api.get(`/veiculos/${props.searchParams.edit}`);
+    console.log(res.data.data);
+    // @ts-ignore
+    document.getElementsByName("dataDeRegisto")[0].value =
+      res.data.data.dataDeRegistro;
+    // @ts-ignore
+    document.getElementsByName("tipoPlaca")[0].value = res.data.data.tipoPlaca;
+    // @ts-ignore
+    document.getElementsByName("placa")[0].value = res.data.data.placa;
+    // @ts-ignore
+    document.getElementsByName("motorista")[0].value =
+      res.data.data.nomeMotorista;
+    // @ts-ignore
+    document.getElementsByName("transportadora")[0].value =
+      res.data.data.transportadora;
+  };
+  const handleTransportadoras = async () => {
+    const r = await api.get("/transportadoras");
+    setTransportadoras(r);
+  };
 
-    if (isLoading) {
-      return <Loading />;
+  useEffect(() => {
+    handleTransportadoras();
+    if (props.searchParams.edit != undefined) {
+      handleValues();
     }
+  }, []);
+
+  if (props.searchParams.edit != undefined) {
     return (
       <main className="p-5 w-full h-screen bg-zinc-100 overflow-y-scroll">
         <h1 className="text-2xl font-semibold">Novo</h1>
         <form
           className="w-full flex flex-col gap-3"
           action={async (data: FormData) => {
-            const msg = await handleSave(data);
+            const msg = await handleEdit(
+              props.searchParams.edit as string,
+              data
+            );
             if (msg != "Erro na Api") {
               swal.fire("Boa!", "Deu tudo certo!", "success");
-              clear();
+              router.back();
             } else {
               swal.fire("Oh no...", "Algo deu errado!", "error");
             }
@@ -84,6 +104,24 @@ export default function Page(props: PageProps) {
             >
               <Actions.icon src={x} alt="X" />
               <Actions.label>Cancelar</Actions.label>
+            </Actions.action>
+            <Actions.action
+              onClick={async (e) => {
+                e.preventDefault();
+                const msg = await handleDelete(
+                  props.searchParams.edit as string
+                );
+                if (msg != "Erro na Api") {
+                  swal.fire("Boa!", "Deu tudo certo!", "success");
+                  clear();
+                } else {
+                  swal.fire("Oh no...", "Algo deu errado!", "error");
+                }
+                router.back();
+              }}
+            >
+              <Actions.icon src={trash} alt="Trash" />
+              <Actions.label>Deletar</Actions.label>
             </Actions.action>
           </Actions.root>
 
@@ -160,13 +198,14 @@ export default function Page(props: PageProps) {
                       name={"transportadora"}
                       className="w-fit h-full outline-none"
                     >
-                      {transportadoras.data.data.map(
-                        (trans: any, i: number) => (
-                          <option key={i} value={trans.id}>
-                            {trans.nome}
-                          </option>
-                        )
-                      )}
+                      {transportadoras != null &&
+                        transportadoras.data.data.map(
+                          (trans: any, i: number) => (
+                            <option key={i} value={trans.id}>
+                              {trans.nome}
+                            </option>
+                          )
+                        )}
                     </select>
                   </div>
                 </div>
@@ -287,13 +326,14 @@ export default function Page(props: PageProps) {
                       name={"transportadora"}
                       className="w-fit h-full outline-none"
                     >
-                      {transportadoras.data.data.map(
-                        (trans: any, i: number) => (
-                          <option key={i} value={trans.id}>
-                            {trans.nome}
-                          </option>
-                        )
-                      )}
+                      {transportadoras != null &&
+                        transportadoras.data.data.map(
+                          (trans: any, i: number) => (
+                            <option key={i} value={trans.id}>
+                              {trans.nome}
+                            </option>
+                          )
+                        )}
                     </select>
                   </div>
                 </div>

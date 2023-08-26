@@ -26,5 +26,31 @@ const handleSave = async (data: FormData) => {
     return "Erro na Api";
   }
 };
+const handleEdit = async (id: string, data: FormData) => {
+  const body: veiculo = {
+    dataDeRegistro: data.get("dataDeRegisto") as string,
+    nomeMotorista: data.get("motorista") as string,
+    tipoPlaca: data.get("tipoPlaca") as string,
+    placa: data.get("placa") as string,
+    transportadoraId: data.get("transportadora") as string,
+  };
 
-export { handleSave };
+  const r: any = await api.put(`/veiculos/${id}`, body);
+
+  if (r.status == 200) {
+    return "Criado Com Sucesso";
+  } else {
+    return "Erro na Api";
+  }
+};
+const handleDelete = async (id: string) => {
+  const r: any = await api.delete(`/veiculos/${id}`);
+
+  if (r.status == 200) {
+    return "Criado Com Sucesso";
+  } else {
+    return "Erro na Api";
+  }
+};
+
+export { handleSave, handleDelete, handleEdit };

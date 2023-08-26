@@ -39,8 +39,8 @@ const handleSave = async (data: FormData) => {
     email: data.get("email") as string,
     observacao: data.get("observacao") as string,
   };
-  const r: any = await api.post("/Transportadoras", body);
-  console.log(r);
+  const r: any = await api.post("/transportadoras", body);
+  console.log(JSON.stringify(body));
 
   if (r.status == 201) {
     return "Criado Com Sucesso";

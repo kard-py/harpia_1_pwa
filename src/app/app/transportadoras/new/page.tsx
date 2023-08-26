@@ -109,7 +109,6 @@ export default function Page(props: PageProps) {
     }
   }, []);
   if (props.searchParams.edit != undefined) {
-  
     return (
       <main className="p-5 w-full h-screen bg-zinc-100 overflow-y-scroll">
         <h1 className="text-2xl font-semibold">Novo</h1>
@@ -313,17 +312,17 @@ export default function Page(props: PageProps) {
       </main>
     );
   }
-  
+
   return (
     <main className="p-5 w-full h-screen bg-zinc-100 overflow-y-scroll">
       <h1 className="text-2xl font-semibold">Novo</h1>
       <form
         className="w-full flex flex-col gap-3"
         action={async (data: FormData) => {
-          const msg = await handleEdit(props.searchParams.edit as string, data);
+          const msg = await handleSave(data);
           if (msg != "Erro na Api") {
             swal.fire("Boa!", "Deu tudo certo!", "success");
-            router.back();
+            clear();
           } else {
             swal.fire("Oh no...", "Algo deu errado!", "error");
           }

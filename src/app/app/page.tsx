@@ -8,10 +8,7 @@ import scales from "../../../public/imgs/scales.png";
 import { Overview } from "@/components/chart";
 import Actions from "@/components/actions";
 
-
 export default function Page() {
-
-
   return (
     <main className="p-5 w-full min-h-screen h-full">
       <div className="flex items-center gap-5">
@@ -73,7 +70,7 @@ export default function Page() {
               <CardTitle>Ações Rapidas</CardTitle>
             </CardHeader>
             <CardContent>
-              <Actions.root className="grid xl:grid-cols-4 grid-cols-1 gap-5">
+              <Actions.root className="grid 2xl:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
                 <Actions.action>
                   <Actions.icon src={scales} alt="Scales" />
                   <Actions.label>Nova Pesagem</Actions.label>
@@ -95,10 +92,9 @@ export default function Page() {
                 </Actions.action>
               </Actions.root>
             </CardContent>
-
           </Card>
         </div>
       </div>
-    </main >
+    </main>
   );
 }
