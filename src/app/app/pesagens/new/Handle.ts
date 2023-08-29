@@ -9,6 +9,15 @@ const handleSave = async (data: FormData) => {
   const pesoSaida = data.get("pesoSaida");
   const pesoEntrada = data.get("pesoEntrada");
   const nf = data.get("nf");
+
+  
+  const r = { status: 201 };
+
+  if (r.status == 201) {
+    return "Criado Com Sucesso";
+  } else {
+    return "Erro na Api";
+  }
 };
 
 export { handleSave };

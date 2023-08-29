@@ -12,7 +12,11 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { handleSave } from "./Handle";
-import io from "@/services/io";
+
+import swal from "sweetalert2";
+
+import api from "@/services/api";
+import Loading from "@/app/loading";
 interface Props {
   params: {};
   searchParams: {
@@ -26,40 +30,55 @@ export default function Page(props: Props) {
   const [placa, setPlaca] = useState<string>("");
   const [motorista, setMotorista] = useState<string>("");
   const [nf, setNf] = useState<string>("");
-  const [tipoPlaca, setTipoPlaca] = useState<string>("0");
   const [isPesoManual, setIsPesoManual] = useState<boolean>(false);
+  const [isLoading, setLoading] = useState<boolean>(false);
   const [transportadora, setTrasportadora] = useState<string>("default");
   const [produto, setProduto] = useState<string>("default");
   const [pesoAtual, setPesoAtual] = useState<number>(0);
   const [pesoSaida, setPesoSaida] = useState<number>(0);
   const [pesoEntrada, setPesoEntrada] = useState<number>(0);
   const [enviado, setEnviado] = useState<boolean>(false);
+
+  const [transportadoras, setTrasportadoras] = useState<any>([]);
   const [produtos, setProdutos] = useState<any>([]);
+  const [veiculos, setVeiculos] = useState<any>([]);
 
-  useEffect(() => {
-    document.getElementById("form")?.addEventListener("keypress", (e) => {
-      if (e?.key == "Enter") {
-        e.preventDefault();
-      }
-    });
-  });
+  const handleProdutos = async () => {
+    api
+      .get("/produtos")
+      .then((res) => {
+        setProdutos(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const handleTrasportadoras = async () => {
+    api
+      .get("/transportadoras")
+      .then((res) => {
+        setTrasportadoras(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const handleVeiculos = async () => {
+    api
+      .get("/veiculos")
+      .then((res) => {
+        setVeiculos(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
-  const placaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const placaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const input = e.currentTarget;
     setPlaca((a) => input.value);
-    input.addEventListener("keypress", (key: KeyboardEvent) => {
-      if (key.key != "Enter") {
-        return null;
-      }
-      consultaPlaca(input.value);
-      setPesoEntrada((value) => pesoAtual);
-    });
-    input.addEventListener("blur", (e) => {
-      if (input.value[input.value.length - 1] != "_") {
-        consultaPlaca(input.value);
-        setPesoEntrada((value) => pesoAtual);
-      }
-    });
+    consultaPlaca(input.value);
+    setPesoEntrada((value) => pesoAtual);
   };
 
   const registrarSaida = (e: any) => {
@@ -67,20 +86,40 @@ export default function Page(props: Props) {
     setPesoSaida((value) => pesoAtual);
   };
 
-  const consultaPlaca = async (placa: string) => { };
+  const consultaPlaca = async (placa: string) => {
+    api
+      .get(`/veiculos/${placa}`)
+      .then((res) => {
+        setMotorista(res.data.data.nomeMotorista);
+        setTrasportadora(res.data.data.transportadoraId);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const clear = () => {
+    document.getElementById("clear")?.click();
+    setTrasportadora("");
+    setProduto("");
+    setMotorista("");
+    setPlaca("default");
+    setPesoEntrada(0);
+    setPesoSaida(0);
+    setNf("");
+  };
+
   useEffect(() => {
+    handleProdutos();
+    handleTrasportadoras();
+    handleVeiculos();
+    setTimeout(() => {
+      if (pesoAtual < 80000) {
+        setPesoAtual((value) => value + 100);
+      } else {
+        setPesoAtual((value) => 100);
+      }
+    }, 500);
+  }, [pesoAtual]);
 
-    const sw = io.init("wss://3010-kardpy-harpia1-o4fe3yy6xa3.ws-us104.gitpod.io/serial")
-    io.onOpen(sw, (e) => {
-
-    })
-    io.onMessage(sw, (e) => {
-      console.log(e);
-
-    })
-
-
-  }, []);
   return (
     <main
       className="p-5 w-full h-screen bg-zinc-100 overflow-y-scroll"
@@ -90,26 +129,15 @@ export default function Page(props: Props) {
       <form
         id="form"
         className="w-full flex flex-col gap-3"
-        action={async (forData) => {
-          if (pesoEntrada == 0) {
-            return null;
+        action={async (data: FormData) => {
+          const msg = await handleSave(data);
+          if (msg != "Erro na Api") {
+            swal.fire("Boa!", "Deu tudo certo!", "success");
+            clear();
+          } else {
+            swal.fire("Oh no...", "Algo deu errado!", "error");
           }
-          setPesoEntrada(0);
-          setPesoSaida(0);
-          setTrasportadora("default");
-          setMotorista("");
-          setNf("");
-          setProduto("default");
-          setPlaca("");
-          setEnviado(true);
-          setTimeout(() => {
-            setEnviado(false);
-          }, 3000);
-          // @ts-ignore
-          formRef.current.reset();
-          await handleSave(forData);
         }}
-        ref={formRef}
       >
         <Actions.root>
           <Actions.action type="submit" id="save" tabIndex={4}>
@@ -133,73 +161,34 @@ export default function Page(props: Props) {
             <Actions.icon src={manual} alt="Manual" />
             <Actions.label>Manual</Actions.label>
           </Actions.action>
-
-          <Actions.action
-            className={`flex flex-col items-center duration-300 select-none cursor-default ${enviado ? "scale-100" : "scale-0"
-              }`}
-          >
-            <Actions.icon src={ok} alt="Ok" />
-            <Actions.label>Sucesso</Actions.label>
-          </Actions.action>
         </Actions.root>
+
+        <div className="hidden">
+          <button type="reset" id="clear">
+            Limpar Campos
+          </button>
+        </div>
         <div className="flex flex-row w-full gap-10 h-full">
           <Card className="p-5">
             <div className="flex flex-col w-fit gap-3 h-full">
-              <div className="flex flex-row justify-between gap-4 w-96">
-                <div className="flex flex-col w-fit justify-center-center gap-2">
-                  <Label>Tipo da Placa</Label>
-                  <div className="rounded-md border bg-white border-input h-10 px-4">
-                    <select
-                      name="tipoPlaca"
-                      className="w-full h-full outline-none"
-                      value={tipoPlaca}
-                      required
-                      onChange={(e) => {
-                        setPlaca("");
-                        setTipoPlaca(e.currentTarget.value);
-                      }}
-                    >
-                      <option value={0}>Placa Antiga</option>
-                      <option value={1}>Placa Marcosul</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="flex flex-col w-fit justify-center-center gap-2">
-                  {tipoPlaca == "0" ? (
-                    <>
-                      <Label>Placa Antiga</Label>
-                      <InputMask
-                        autoFocus
-                        tabIndex={1}
-                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                        mask="aaa-9999"
-                        alwaysShowMask={false}
-                        placeholder="ABC-1234"
-                        name="placa"
-                        value={placa}
-                        onChange={(v: any) => {
-                          setPlaca((value) => v.currentTarget?.value);
-                          placaChange(v);
-                        }}
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <Label>Placa Marcosul</Label>
-                      <InputMask
-                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                        autoFocus
-                        mask={"aaa-9a99"}
-                        placeholder="ABC-1D23"
-                        name="placa"
-                        value={placa}
-                        onChange={(v: any) => {
-                          setPlaca((value) => v.currentTarget?.value);
-                          placaChange(v);
-                        }}
-                      />
-                    </>
-                  )}
+              <div className="flex flex-col justify-between gap-4 w-96">
+                <Label>Placa</Label>
+                <div className="rounded-md border bg-white border-input w-96 h-10 px-3">
+                  <select
+                    name="placa"
+                    tabIndex={3}
+                    required
+                    className="w-full h-full outline-none"
+                    defaultValue={"default"}
+                    onChange={(e) => {
+                      placaChange(e);
+                    }}
+                  >
+                    <option value={"default"}>Selecione uma Placa</option>
+                    {veiculos.map((veiculo: any, i: number) => (
+                      <option value={veiculo.id}>{veiculo.placa}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
               <div className="flex flex-col w-full gap-2">
@@ -207,11 +196,13 @@ export default function Page(props: Props) {
                 <Input
                   disabled
                   tabIndex={2}
+                  required
                   className="w-96"
                   name="motorista"
                   value={motorista}
                   onChange={(v: any) => setMotorista(v.currentTarget?.value)}
                 />
+                <input type="hidden" name="motorista" value={motorista} />
               </div>
               <div className="mb-2">
                 <Label>Transportadora</Label>
@@ -231,9 +222,17 @@ export default function Page(props: Props) {
                     <option value={"default"}>
                       Selecione uma Transportadora
                     </option>
-                    <option value={0}>Vale Delgado sla das quantas</option>
-                    <option value={1}>Agroboi</option>
+                    {transportadoras.map((transportadora: any, i: number) => (
+                      <option key={i} value={transportadora.id}>
+                        {transportadora.nome}
+                      </option>
+                    ))}
                   </select>
+                  <input
+                    type="hidden"
+                    name="transportadora"
+                    value={transportadora}
+                  />
                 </div>
               </div>
               <div className="mb-2">
@@ -250,8 +249,12 @@ export default function Page(props: Props) {
                     }}
                   >
                     <option value={"default"}>Selecione um Produto</option>
-                    <option value={"milho"}>Milho</option>
-                    <option value={"soja"}>Soja</option>
+
+                    {produtos.map((produto: any, i: number) => (
+                      <option key={i} value={produto.Id}>
+                        {produto.nome}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>

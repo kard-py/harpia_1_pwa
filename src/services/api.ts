@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = {
-  baseUrl: "http://localhost:3010",
+  baseUrl: "https://refactored-spoon-qg67754gq94cxrx4-3010.app.github.dev",
   get: async (route: string) => {
     const url = api.baseUrl + route;
     const res = await axios.get(url);
