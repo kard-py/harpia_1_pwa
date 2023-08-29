@@ -11,14 +11,16 @@ const handleSave = async (data: FormData) => {
     password: data.get("pass") as string,
   };
   const r: any = await api.post("/users", body);
-  if (r.status == 201) {
+  console.log(r);
+
+  if (r.status == "success") {
     return "Criado Com Sucesso";
   } else {
     return "Erro na Api";
   }
 };
 
-const handleEdit = async (id:string, data: FormData) => {
+const handleEdit = async (id: string, data: FormData) => {
   const body: User = {
     username: data.get("usuario") as string,
     password: data.get("pass") as string,
@@ -33,12 +35,12 @@ const handleEdit = async (id:string, data: FormData) => {
 
 const handleDelete = async (id: string) => {
   const r: any = await api.delete(`/users/${id}`);
+
   if (r.status == 200) {
     return "Criado Com Sucesso";
   } else {
     return "Erro na Api";
   }
 };
-
 
 export { handleSave, handleDelete, handleEdit };
