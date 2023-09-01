@@ -37,10 +37,10 @@ const Root = ({ children }: Props) => {
             <SideBar.icon src={car} alt="Car" />
             <SideBar.label className="text-white">Veículos</SideBar.label>
           </SideBar.option>
-          <SideBar.option href={"/app/operadores"}>
+          {/* <SideBar.option href={"/app/operadores"}>
             <SideBar.icon src={person} alt="Person" />
             <SideBar.label className="text-white">Operadores</SideBar.label>
-          </SideBar.option>
+          </SideBar.option> */}
           <SideBar.option href={"/app/produtos"}>
             <SideBar.icon src={box} alt="Box" />
             <SideBar.label className="text-white">Produtos</SideBar.label>
